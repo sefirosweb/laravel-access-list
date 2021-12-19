@@ -1,0 +1,20 @@
+{
+    "name": "sefirosweb/laravel-access-list",
+    "description": "Package for made a simply crud database for advance access list for application with middleware check",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sefirosweb\\LaravelAccessList\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Sefirosweb",
+            "email": "sefirosweb@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+    
+}

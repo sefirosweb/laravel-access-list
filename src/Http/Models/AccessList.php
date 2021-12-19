@@ -1,6 +1,6 @@
 <?php
 
-namespace Sefirosweb\LaravelAccessList\Models;
+namespace Sefirosweb\LaravelAccessList\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

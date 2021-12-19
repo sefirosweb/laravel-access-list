@@ -4,9 +4,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Sefirosweb\LaravelAccessList\Models\AccessList;
+use Sefirosweb\LaravelAccessList\Http\Models\Role;
 
-class CreateAccessListsTable extends Migration
+class CreateRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -15,23 +15,23 @@ class CreateAccessListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('access_lists', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
             $table->string('description');
             $table->timestamps();
         });
 
-        AccessList::insert([
+        Role::insert([
             [
                 'name' => 'admin',
-                'description' => 'Super administrator, can access to all',
+                'description' => 'Group of administrators',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ],
             [
-                'name' => 'acl_edit',
-                'description' => 'Manage who can edit the access list and users',
+                'name' => 'acl',
+                'description' => 'Group for manage the roles and users',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
             ]
@@ -45,6 +45,6 @@ class CreateAccessListsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('access_lists');
+        Schema::dropIfExists('roles');
     }
 }

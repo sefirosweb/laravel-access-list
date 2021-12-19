@@ -13,6 +13,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('acl::layout');
+        return view('acl::access-list');
     }
 }

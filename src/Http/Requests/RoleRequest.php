@@ -28,7 +28,7 @@ class RoleRequest extends FormRequest
                 'required',
                 'min:3',
                 'max:255',
-                'unique:App\Models\Role,name,' . $this->id
+                'unique:Sefirosweb\LaravelAccessList\Http\Models\Role,name,' . $this->id
             ],
             'description' => [
                 'required',

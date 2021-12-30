@@ -27,7 +27,7 @@ Route::group(['namespace' => 'Sefirosweb\LaravelAccessList\Http\Controllers'], f
 
     Route::group(['prefix' => 'acl' /*, 'middleware' => ['checkAcl:acl_view']*/], function () {
 
-        Route::get('roles', 'RoleController@index');
+        Route::get('roles', 'RoleController@get');
         Route::get('users', 'UserController@get');
         Route::get('access_list', 'AccessListController@get');
         Route::get('get_users_list', 'UserController@get_users_list');

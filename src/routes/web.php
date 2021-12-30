@@ -21,9 +21,11 @@ Route::group(['namespace' => 'Sefirosweb\LaravelAccessList\Http\Controllers'], f
         Route::put('access_list', 'AccessListController@update');
         Route::delete('access_list', 'AccessListController@destroy');
 
-        Route::post('get_group_info', 'UserController@get_group_info');
-        Route::delete('delete_from_role', 'UserController@delete_from_role');
-        Route::post('insert_into_role', 'UserController@insert_into_role');
+
+
+        // Route::post('get_group_info', 'UserController@get_group_info');
+        // Route::delete('delete_from_role', 'UserController@delete_from_role');
+        // Route::post('insert_into_role', 'UserController@insert_into_role');
     });
 
     Route::group(['prefix' => 'acl' /*, 'middleware' => ['checkAcl:acl_view']*/], function () {
@@ -32,8 +34,8 @@ Route::group(['namespace' => 'Sefirosweb\LaravelAccessList\Http\Controllers'], f
         Route::get('roles', 'RoleController@get');
         Route::get('access_list', 'AccessListController@get');
 
-        Route::get('get_users_list', 'UserController@get_users_list');
-        Route::get('get_acl_list', 'UserController@get_acl_list');
+        // Route::get('get_users_list', 'UserController@get_users_list');
+        // Route::get('get_acl_list', 'UserController@get_acl_list');
     });
 
     Route::group(['prefix' => 'acl/view' /*, 'middleware' => ['checkAcl:acl_view']*/], function () {

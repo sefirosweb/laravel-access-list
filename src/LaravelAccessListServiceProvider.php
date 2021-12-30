@@ -13,7 +13,7 @@ class LaravelAccessListServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
         $this->publishes([
             __DIR__ . '/../public' => public_path('vendor/laravel-access-list'),
-        ], 'public');
+        ], 'laravel-access-list-view');
     }
 
     public function register()

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
-use App\Models\User;
+use Sefirosweb\LaravelAccessList\Http\Models\User;
 use Sefirosweb\LaravelAccessList\Http\Models\AccessList;
 use Sefirosweb\LaravelAccessList\Http\Models\Role;
 use Sefirosweb\LaravelAccessList\Http\Requests\UserRequest;
@@ -15,8 +15,7 @@ class UserController extends Controller
 {
     public function get()
     {
-        $users = User::all()->toArray();
-        return response()->json(['totalNotFiltered' => count($users), 'total' => count($users), 'rows' => $users]);
+        return response()->json(['success' => true, 'data' => User::all()]);
     }
 
     public function get_group_info(Request $request)
@@ -49,7 +48,7 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $request->merge([
-            'password' => Hash::make('guest')
+            'password' => $request->password ? Hash::make($request->password) : Hash::make('guest')
         ]);
 
         User::create($request->all());
@@ -60,54 +59,35 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\UserRequest  $request
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function update(UserRequest $request, User $user)
     {
+        $update = $request->all();
+        if (isset($update['password']) && $update['password']) {
+            $update['password'] = Hash::make($request->password);
+        } else {
+            unset($update['password']);
+        }
+
         $mailingGroup = User::findOrFail($request->id);
-        $mailingGroup->update($request->all());
+        $mailingGroup->update($update);
         return response()->json(['success' => true]);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function updatePassword(Request $request, User $user)
-    {
-        $user = User::findOrFail($request->id);
-
-        $validated = $request->validate([
-            'password' => 'required|min:8|max:255'
-        ]);
-
-        $user->update([
-            'password' => Hash::make($request->password)
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => "Contraseña actualizada!",
-            'messageStatus' => "success",
-            'title' => 'Esto es el titulo'
-        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\User  $user
+     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
     {
         $mailingGroup = User::findOrFail($request->id);
-        $mailingGroup->update(['is_active' => $mailingGroup->is_active === 1 ? 0 : 1]);
-        return response()->json(['success' => true]);
+        $switch = $mailingGroup->is_active === 1 ? 0 : 1;
+        $mailingGroup->update(['is_active' => $switch]);
+        return response()->json(['success' => true, $switch]);
     }
 
     public function delete_from_role(Request $request)

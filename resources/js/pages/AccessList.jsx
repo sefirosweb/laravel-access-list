@@ -25,7 +25,7 @@ const AccessList = () => {
                     {
                         accessor: 'name',
                         Header: 'Name',
-                        titleOnCRUD: 'ACL Nanme',
+                        titleOnCRUD: 'ACL Name',
                         editable: true,
                         sortable: true,
                     },

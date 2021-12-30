@@ -11,7 +11,7 @@ const Roles = () => {
                 canEdit
                 canRefresh
                 canSearch
-                createButtonTitle="Create Access List"
+                createButtonTitle="Create Role"
                 crudUrl={url}
                 primaryKey="id"
                 titleOnDelete="name"
@@ -25,7 +25,7 @@ const Roles = () => {
                     {
                         accessor: 'name',
                         Header: 'Name',
-                        titleOnCRUD: 'ACL Nanme',
+                        titleOnCRUD: 'Role Name',
                         editable: true,
                         sortable: true,
                     },

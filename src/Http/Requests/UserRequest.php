@@ -35,7 +35,12 @@ class UserRequest extends FormRequest
                 'min:3',
                 'max:255',
                 'unique:App\Models\User,email,' . $this->id
-            ]
+            ],
+            'password' => [
+                'nullable',
+                'min:6',
+                'max:255',
+            ],
         ];
     }
 }

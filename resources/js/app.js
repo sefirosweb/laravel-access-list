@@ -14,13 +14,13 @@ require("./bootstrap");
 
 import React from "react";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
+import RoutesConfig from "@/routes/RoutesConfig";
 
 if (document.getElementById("root")) {
   // ReactDOM.render(<Example />, document.getElementById('root'));
   ReactDOM.render(
     <React.StrictMode>
-      <>HOla mundo</>
+      <RoutesConfig />
     </React.StrictMode>,
     document.getElementById("root")
   );

@@ -14,7 +14,7 @@ class AccessListController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function get()
     {
         return response()->json(['success' => true, 'data' => AccessList::all()]);
     }

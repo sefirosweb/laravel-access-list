@@ -28,7 +28,7 @@ class AccessListRequest extends FormRequest
                 'required',
                 'min:3',
                 'max:255',
-                'unique:App\Models\AccessList,name,' . $this->id
+                'unique:Sefirosweb\LaravelAccessList\Http\Models\AccessList,name,' . $this->id
             ],
             'description' => [
                 'required',

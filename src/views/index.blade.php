@@ -24,4 +24,9 @@
     <script src="{{ asset('vendor/laravel-access-list/js/app.js') }}"></script>
 </body>
 
+<?php
+
+// phpinfo();
+?>
+
 </html>

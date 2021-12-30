@@ -29,7 +29,7 @@ Route::group(['namespace' => 'Sefirosweb\LaravelAccessList\Http\Controllers'], f
 
         Route::get('roles', 'RoleController@index');
         Route::get('users', 'UserController@get');
-        Route::get('access_list', 'AccessListController@index');
+        Route::get('access_list', 'AccessListController@get');
         Route::get('get_users_list', 'UserController@get_users_list');
         Route::get('get_acl_list', 'UserController@get_acl_list');
     });

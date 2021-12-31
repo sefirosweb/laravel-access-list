@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['namespace' => 'Sefirosweb\LaravelAccessList\Http\Controllers'], function () {
 
     // ACL system
-    Route::group(['prefix' => 'acl' /*, 'middleware' => ['checkAcl:acl_edit']*/], function () {
+    Route::group(['prefix' => 'acl', 'middleware' => ['checkAcl:acl_edit']], function () {
         // Users
         Route::post('users', 'UserController@store');
         Route::put('users', 'UserController@update');
@@ -40,13 +40,13 @@ Route::group(['namespace' => 'Sefirosweb\LaravelAccessList\Http\Controllers'], f
         Route::delete('role/access_lists', 'RoleController@delete_access_list_of_the_role');
     });
 
-    Route::group(['prefix' => 'acl' /*, 'middleware' => ['checkAcl:acl_view']*/], function () {
+    Route::group(['prefix' => 'acl', 'middleware' => ['checkAcl:acl_view']], function () {
         Route::get('users', 'UserController@get');
         Route::get('roles', 'RoleController@get');
         Route::get('access_list', 'AccessListController@get');
     });
 
-    Route::group(['prefix' => 'acl/view' /*, 'middleware' => ['checkAcl:acl_view']*/], function () {
+    Route::group(['prefix' => 'acl/view', 'middleware' => ['checkAcl:acl_view']], function () {
         Route::get('{any}', function () {
             return view('acl::index');
         })->where('any', '.*');

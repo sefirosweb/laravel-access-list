@@ -18,4 +18,11 @@ class User extends ModelsUser
     {
         return $this->belongsToMany(Role::class, 'user_has_role');
     }
+
+    public function getAclList()
+    {
+        return array_unique($this->roles->reduce(function ($carry, $role) {
+            return array_merge($carry, array_column($role->access_lists->toArray(), 'name'));
+        }, []));
+    }
 }

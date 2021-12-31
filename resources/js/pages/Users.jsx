@@ -61,6 +61,7 @@ const Users = () => {
                     {
                         accessor: 'password',
                         titleOnCRUD: 'Password',
+                        Header: 'Password',
                         visible: false,
                         editable: true,
                         type: 'password'

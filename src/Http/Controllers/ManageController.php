@@ -47,14 +47,14 @@ class ManageController extends Controller
 
     public function get_roles_array()
     {
-        return response()->json(Role::all()->map->name);
+        return response()->json(['success' => true, 'data' => Role::all()->map->name]);
     }
     public function get_acl_array()
     {
-        return response()->json(AccessList::all()->map->name);
+        return response()->json(['success' => true, 'data' => AccessList::all()->map->name]);
     }
     public function get_users_array()
     {
-        return response()->json(User::all()->map->email);
+        return response()->json(['success' => true, 'data' => User::all()->map->email]);
     }
 }

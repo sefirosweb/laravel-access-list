@@ -19,8 +19,8 @@ class CreateRoleHasAcl extends Migration
             $table->unsignedBigInteger('access_list_id');
             $table->unsignedBigInteger('role_id');
             $table->primary(['access_list_id', 'role_id']);
-            $table->foreign('role_id')->references('id')->on('roles');
-            $table->foreign('access_list_id')->references('id')->on('access_lists');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreign('access_list_id')->references('id')->on('access_lists')->onDelete('cascade');
         });
 
         Role::where('name', 'admin')->get()->first()->access_lists()->attach(AccessList::where('name', 'admin')->get()->first());

@@ -13,7 +13,7 @@ class Role extends Model
 
     public function users()
     {
-        return $this->belongsToMany(\App\User::class, 'user_has_role');
+        return $this->belongsToMany(User::class, 'user_has_role');
     }
 
     public function access_lists()

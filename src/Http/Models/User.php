@@ -13,4 +13,9 @@ class User extends ModelsUser
 
         $this->mergeFillable(['is_active']);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_has_role');
+    }
 }

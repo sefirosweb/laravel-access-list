@@ -36,7 +36,53 @@ const Roles = () => {
                         editable: true,
                         sortable: true,
                         type: 'text'
-                    }
+                    },
+                    {
+                        accessor: 'users',
+                        titleOnCRUD: 'Users',
+                        Header: 'Users',
+                        editable: true,
+                        type: 'multiselect',
+                        multiSelectOptionsPrimaryKey: 'id',
+                        multiSelectOptionsUrl: `${APP_URL}/acl/role/users`,
+                        multiSelectOptionsColumns: [
+                            {
+                                Header: '#',
+                                accessor: 'id'
+                            },
+                            {
+                                Header: 'Name',
+                                accessor: 'name'
+                            },
+                            {
+                                Header: 'Email',
+                                accessor: 'email'
+                            }
+                        ],
+                    },
+                    {
+                        accessor: 'access_lists',
+                        titleOnCRUD: 'Access Lists',
+                        Header: 'Access Lists',
+                        editable: true,
+                        type: 'multiselect',
+                        multiSelectOptionsPrimaryKey: 'id',
+                        multiSelectOptionsUrl: `${APP_URL}/acl/role/access_lists`,
+                        multiSelectOptionsColumns: [
+                            {
+                                Header: '#',
+                                accessor: 'id'
+                            },
+                            {
+                                Header: 'Name',
+                                accessor: 'name'
+                            },
+                            {
+                                Header: 'Description',
+                                accessor: 'description'
+                            }
+                        ],
+                    },
                 ]}
             />
         </>

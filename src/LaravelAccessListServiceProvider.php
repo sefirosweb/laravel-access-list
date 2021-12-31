@@ -14,6 +14,8 @@ class LaravelAccessListServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../public' => public_path('vendor/laravel-access-list'),
         ], 'laravel-access-list-view');
+
+        $this->app['router']->aliasMiddleware('checkAcl', 'Sefirosweb\LaravelAccessList\Http\Middleware\CheckACLMiddleware::class');
     }
 
     public function register()

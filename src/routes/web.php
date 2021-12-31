@@ -28,6 +28,12 @@ Route::group(['namespace' => 'Sefirosweb\LaravelAccessList\Http\Controllers'], f
         Route::delete('user/roles', 'ManageController@delete_role_of_the_user');
 
 
+        Route::get('access_list/roles', 'ManageController@get_roles_from_access_list');
+        Route::get('access_list/roles/get_array', 'ManageController@get_roles_array');
+        Route::post('access_list/roles', 'ManageController@add_role_to_access_list');
+        Route::delete('access_list/roles', 'ManageController@delete_role_of_the_access_list');
+
+
 
         // Route::post('get_group_info', 'UserController@get_group_info');
         // Route::delete('delete_from_role', 'UserController@delete_from_role');

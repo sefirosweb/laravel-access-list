@@ -36,7 +36,30 @@ const AccessList = () => {
                         editable: true,
                         sortable: true,
                         type: 'text'
-                    }
+                    },
+                    {
+                        accessor: 'roles',
+                        titleOnCRUD: 'Roles',
+                        Header: 'Roles',
+                        editable: true,
+                        type: 'multiselect',
+                        multiSelectOptionsPrimaryKey: 'id',
+                        multiSelectOptionsUrl: `${APP_URL}/acl/access_list/roles`,
+                        multiSelectOptionsColumns: [
+                            {
+                                Header: '#',
+                                accessor: 'id'
+                            },
+                            {
+                                Header: 'Name',
+                                accessor: 'name'
+                            },
+                            {
+                                Header: 'Descripcion',
+                                accessor: 'description'
+                            }
+                        ],
+                    },
                 ]}
             />
         </>

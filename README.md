@@ -46,7 +46,7 @@ Route::group(['middleware' => ['checkAcl:foo_role_1']], function () {
 Add more ACLs for your application:
 http://your_app/acl/view/users
 
-![image](https://github.com/sefirosweb/laravel-access-list/tree/master/docs/how_to.gif)
+![image](https://raw.githubusercontent.com/sefirosweb/laravel-access-list/master/docs/how_to.gif)
 
 # Develop
 

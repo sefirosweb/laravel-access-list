@@ -35,6 +35,18 @@ For older versions of Laravel (<5.5), you have to add the service provider:
 ]
 ```
 
+Install database migrations
+
+```
+php artisan migrate
+```
+
+Publish React front end:
+
+```
+php artisan vendor:publish --tag laravel-access-list-view
+```
+
 Add in to routes of web.php or api.php
 
 ```php
@@ -67,4 +79,6 @@ npm run watch
 
 ```
 npm run prod
+git tag X.X.X
+git push --tag
 ```

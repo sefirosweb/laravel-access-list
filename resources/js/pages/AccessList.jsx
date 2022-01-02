@@ -5,7 +5,7 @@ const AccessList = () => {
 
     return (
         <>
-            <h1>AccessList</h1>
+            <h1>Access List</h1>
             <Crud
                 canDelete
                 canEdit

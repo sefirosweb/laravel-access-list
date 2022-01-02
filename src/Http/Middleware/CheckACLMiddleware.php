@@ -4,6 +4,7 @@ namespace Sefirosweb\LaravelAccessList\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Sefirosweb\LaravelAccessList\Http\Models\User;
 
 class CheckACLMiddleware
 {
@@ -25,13 +26,9 @@ class CheckACLMiddleware
             return redirect('/');
         }
 
-        $acl_list = request()->user()->getAclList();
+        $user = User::find($request->user()->id);
 
-        if (in_array('admin', $acl_list)) {
-            return $next($request);
-        }
-
-        if (!in_array($acl, $acl_list)) {
+        if (!$user->hasAcl($acl)) {
             if ($request->ajax()) {
                 return response()
                     ->json(['message'   => "You don't have permissions for this site"])

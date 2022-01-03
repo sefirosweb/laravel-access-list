@@ -26,6 +26,8 @@ class CheckACLMiddleware
             return redirect('/');
         }
 
+        $acl = str_replace(':class:', '', $acl);
+
         $user = User::find($request->user()->id);
 
         if (!$user->hasAcl($acl)) {

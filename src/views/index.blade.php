@@ -18,7 +18,8 @@
 <body>
     <div id="root"></div>
     <script>
-        window.APP_URL = '{{ env('APP_URL') }}'
+        window.APP_PREFIX = '{{ config('laravel-access-list.prefix') }}'
+        window.APP_URL = '{{ env('APP_URL') }}/' + APP_PREFIX
     </script>
 
     <script src="{{ asset('vendor/laravel-access-list/js/app.js') }}"></script>

@@ -1,8 +1,6 @@
 import { Crud } from '@sefirosweb/react-crud'
 
 const AccessList = () => {
-    const url = `${APP_URL}/acl/access_list`
-
     return (
         <>
             <h1>Access List</h1>
@@ -12,7 +10,7 @@ const AccessList = () => {
                 canRefresh
                 canSearch
                 createButtonTitle="Create Access List"
-                crudUrl={url}
+                crudUrl={`${APP_URL}/access_list`}
                 primaryKey="id"
                 titleOnDelete="name"
                 columns={[
@@ -44,7 +42,7 @@ const AccessList = () => {
                         editable: true,
                         type: 'multiselect',
                         multiSelectOptionsPrimaryKey: 'id',
-                        multiSelectOptionsUrl: `${APP_URL}/acl/access_list/roles`,
+                        multiSelectOptionsUrl: `${APP_URL}/access_list/roles`,
                         multiSelectOptionsColumns: [
                             {
                                 Header: '#',

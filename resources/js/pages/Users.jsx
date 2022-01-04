@@ -10,7 +10,7 @@ const Users = () => {
                 canRefresh
                 canSearch
                 createButtonTitle="Create User"
-                crudUrl={`${APP_URL}/acl/users`}
+                crudUrl={`${APP_URL}/users`}
                 primaryKey="id"
                 titleOnDelete="name"
                 columns={[
@@ -42,7 +42,7 @@ const Users = () => {
                         editable: true,
                         type: 'multiselect',
                         multiSelectOptionsPrimaryKey: 'id',
-                        multiSelectOptionsUrl: `${APP_URL}/acl/user/roles`,
+                        multiSelectOptionsUrl: `${APP_URL}/user/roles`,
                         multiSelectOptionsColumns: [
                             {
                                 Header: '#',

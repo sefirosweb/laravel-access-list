@@ -1,8 +1,6 @@
 import { Crud } from '@sefirosweb/react-crud'
 
 const Roles = () => {
-    const url = `${APP_URL}/acl/roles`
-
     return (
         <>
             <h1>Roles</h1>
@@ -12,7 +10,7 @@ const Roles = () => {
                 canRefresh
                 canSearch
                 createButtonTitle="Create Role"
-                crudUrl={url}
+                crudUrl={`${APP_URL}/roles`}
                 primaryKey="id"
                 titleOnDelete="name"
                 columns={[
@@ -44,7 +42,7 @@ const Roles = () => {
                         editable: true,
                         type: 'multiselect',
                         multiSelectOptionsPrimaryKey: 'id',
-                        multiSelectOptionsUrl: `${APP_URL}/acl/role/users`,
+                        multiSelectOptionsUrl: `${APP_URL}/role/users`,
                         multiSelectOptionsColumns: [
                             {
                                 Header: '#',
@@ -67,7 +65,7 @@ const Roles = () => {
                         editable: true,
                         type: 'multiselect',
                         multiSelectOptionsPrimaryKey: 'id',
-                        multiSelectOptionsUrl: `${APP_URL}/acl/role/access_lists`,
+                        multiSelectOptionsUrl: `${APP_URL}/role/access_lists`,
                         multiSelectOptionsColumns: [
                             {
                                 Header: '#',

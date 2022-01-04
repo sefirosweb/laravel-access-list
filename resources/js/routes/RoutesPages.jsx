@@ -11,9 +11,9 @@ import AccessList from "@/pages/AccessList";
 function RoutesPages() {
     return (
         <Switch>
-            <Route path="/acl/view/users" component={Users} />
-            <Route path="/acl/view/roles" component={Roles} />
-            <Route path="/acl/view/access_list" component={AccessList} />
+            <Route exact path={`/${APP_PREFIX}/view/users`} component={Users} />
+            <Route exact path={`/${APP_PREFIX}/view/roles`} component={Roles} />
+            <Route exact path={`/${APP_PREFIX}/view/access_list`} component={AccessList} />
 
             <Route component={NotFound} />
         </Switch>

@@ -41,10 +41,16 @@ Install database migrations
 php artisan migrate
 ```
 
-Publish React front end:
+Publish React front:
 
 ```
-php artisan vendor:publish --tag laravel-access-list-view
+php artisan vendor:publish --provider="Sefirosweb\LaravelAccessList\LaravelAccessListServiceProvider"  --tag=view --force
+```
+
+If you need edit prefix of tool or middleware you can publish the config:
+
+```
+php artisan vendor:publish --provider="Sefirosweb\LaravelAccessList\LaravelAccessListServiceProvider"  --tag=config --force
 ```
 
 Add in to routes of web.php or api.php

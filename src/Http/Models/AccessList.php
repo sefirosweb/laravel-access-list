@@ -3,6 +3,7 @@
 namespace Sefirosweb\LaravelAccessList\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class AccessList extends Model
 {
@@ -11,7 +12,7 @@ class AccessList extends Model
         'description'
     ];
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'role_has_acl');
     }

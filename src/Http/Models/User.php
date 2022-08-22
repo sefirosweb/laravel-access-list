@@ -4,6 +4,7 @@ namespace Sefirosweb\LaravelAccessList\Http\Models;
 
 use App\Models\User as ModelsUser;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends ModelsUser
 {
@@ -14,7 +15,7 @@ class User extends ModelsUser
         $this->mergeFillable(['is_active']);
     }
 
-    public function roles()
+    public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'user_has_role');
     }

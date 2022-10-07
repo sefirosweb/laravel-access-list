@@ -1,13 +1,10 @@
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
-import Layout from "@/pages/layout/Layout";
 import toastr from "toastr";
 import axios from "axios";
-import { useLayoutEffect } from "react";
-
+import React, { useLayoutEffect } from "react";
 import RoutesPages from "./RoutesPages";
+import { BrowserRouter } from "react-router-dom";
 
-const Routes = (props) => {
-
+export default () => {
     useLayoutEffect(() => {
         toastr.options.preventDuplicates = true;
         toastr.options.timeOut = 10000;
@@ -36,7 +33,9 @@ const Routes = (props) => {
                 switch (statusCode) {
                     case 400:
                         toastr.error(
-                            error.response.data.error_description ? error.response.data.error_description : error.response.data.error,
+                            error.response.data.error_description
+                                ? error.response.data.error_description
+                                : error.response.data.error,
                             "Bad request"
                         );
                         break;
@@ -63,10 +62,14 @@ const Routes = (props) => {
                         break;
                     case 422:
                         const error_422 = `
-                        ${error.response.data.message}<br>
-                        ${Object.keys(error.response.data.errors).map(name => {
-                            return error.response.data.errors[name].join('<br>')
-                        })}`
+                        <div>${error.response.data.message}</div>
+
+                        ${Object.keys(error.response.data.errors).map(
+                            (name) => {
+                                return error.response.data.errors[name].map((e: string) => `<div>${e}</div>`);
+                            }
+                        )}`;
+
                         toastr.warning(error_422, `Unprocessable Entity`);
                         break;
 
@@ -87,14 +90,7 @@ const Routes = (props) => {
 
     return (
         <BrowserRouter>
-            <Switch>
-                <Layout>
-                    <RoutesPages />
-                </Layout>
-            </Switch>
+            <RoutesPages />
         </BrowserRouter>
     );
 }
-
-
-export default Routes

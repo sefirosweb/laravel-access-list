@@ -12,22 +12,17 @@
 
     <link rel="stylesheet" href="{{ asset('vendor/laravel-access-list/css/app.css') }}" />
 
-    <title>{{ env('APP_NAME') }} - ACL System</title>
+    <title>{{ config('app.name') }} - ACL System</title>
 </head>
 
 <body>
     <div id="root"></div>
     <script>
         window.APP_PREFIX = '{{ config('laravel-access-list.prefix') }}'
-        window.APP_URL = '{{ env('APP_URL') }}/' + APP_PREFIX
+        window.APP_URL = '{{ config('app.url') }}/' + APP_PREFIX
     </script>
 
     <script src="{{ asset('vendor/laravel-access-list/js/app.js') }}"></script>
 </body>
-
-<?php
-
-// phpinfo();
-?>
 
 </html>

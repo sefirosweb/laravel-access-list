@@ -12,24 +12,26 @@ const path = require("path");
  |
  */
 
-const app_path = "vendor/laravel-access-list";
-
 mix
   .setPublicPath(process.env.ASSET_PATH)
-  .js("resources/js/app.js", `${app_path}/js`)
-  .options({
-    fileLoaderDirs: {
-      images: `${app_path}/images`,
-      fonts: `${app_path}/fonts`,
-    },
-  })
+  .setResourceRoot('/laravel-mailing')
+  .ts('resources/js/app.tsx', 'js')
+  .sass('resources/sass/app.scss', 'css')
   .react()
-  .sass("resources/sass/app.scss", `${app_path}/css`);
-
-mix.webpackConfig({
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "resources/js/"),
+  .webpackConfig({
+    module: {
+      rules: [
+        {
+          test: /\.tsx?$/,
+          loader: "ts-loader",
+          exclude: /node_modules/
+        }
+      ]
     },
-  },
-});
+    resolve: {
+      extensions: ["*", ".js", ".jsx", ".vue", ".ts", ".tsx"],
+      alias: {
+        '@': path.resolve(__dirname, 'resources/js/')
+      }
+    }
+  });

@@ -41,16 +41,15 @@ Route::group([
     Route::post('role/access_lists', 'RoleController@add_access_list_to_role');
     Route::delete('role/access_lists', 'RoleController@delete_access_list_of_the_role');
 
-
-
     Route::get('users', 'UserController@get');
     Route::get('roles', 'RoleController@get');
     Route::get('access_list', 'AccessListController@get');
 
+    Route::get('/', function () {
+        return view('acl::index');
+    });
 
     Route::get('{any}', function () {
         return view('acl::index');
     })->where('any', '.*')->name('acl_view');
-
-    Route::redirect('/', 'view/users');
 });

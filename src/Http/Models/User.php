@@ -3,7 +3,7 @@
 namespace Sefirosweb\LaravelAccessList\Http\Models;
 
 use App\Models\User as ModelsUser;
-use Illuminate\Database\Eloquent\Model;
+use DateTime;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends ModelsUser
@@ -11,8 +11,13 @@ class User extends ModelsUser
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
+    }
 
-        $this->mergeFillable(['is_active']);
+    public function getDeletedAtAttribute($date)
+    {
+        if (!$date) return null;
+        $time = new DateTime($date);
+        return $time->format('Y-m-d H:i:s');
     }
 
     public function roles(): BelongsToMany

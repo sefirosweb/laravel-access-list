@@ -18,7 +18,9 @@ class UserController extends Controller
      */
     public function get()
     {
-        return response()->json(['success' => true, 'data' => User::all()]);
+        return response()->json(['success' => true, 'data' => User::withTrashed()->get([
+            'id', 'name', 'email', 'deleted_at'
+        ])]);
     }
 
     /**
@@ -53,8 +55,8 @@ class UserController extends Controller
             unset($update['password']);
         }
 
-        $mailingGroup = User::findOrFail($request->id);
-        $mailingGroup->update($update);
+        $user = User::withTrashed()->findOrFail($request->id);
+        $user->update($update);
         return response()->json(['success' => true]);
     }
 
@@ -66,44 +68,41 @@ class UserController extends Controller
      */
     public function destroy(Request $request)
     {
-        $mailingGroup = User::findOrFail($request->id);
-        $switch = $mailingGroup->is_active === 1 ? 0 : 1;
-        $mailingGroup->update(['is_active' => $switch]);
-        return response()->json(['success' => true, $switch]);
+        $user = User::withTrashed()->findOrFail($request->id);
+        if (!$user->deleted_at) {
+            $user->delete();
+        } else {
+            $user->restore();
+        }
+        return response()->json(['success' => true]);
     }
-
 
     public function get_roles_from_user(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-
-        $roles = Role::whereHas('users', function ($query) use ($primaryKeyId) {
-            $query->where('id', $primaryKeyId);
-        })->get();
-
-        return response()->json(['success' => true, 'data' => $roles]);
+        $user = User::withTrashed()->with('roles:id,name,description')->findOrFail($request->primaryKeyId);
+        return response()->json(['success' => true, 'data' => $user->roles]);
     }
+
     public function add_role_to_user(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-        $name = $request->name;
-        $role = Role::firstWhere('name', $name);
-        if (!$role) return response("Data not found", 404);
-
-        $role->users()->syncWithoutDetaching($primaryKeyId);
-        return response()->json(['success' => true, 'data' => $role]);
+        $user = User::withTrashed()->findOrFail($request->primaryKeyId);
+        $user->roles()->syncWithoutDetaching($request->name['value']);
+        return response()->json(['success' => true]);
     }
+
     public function delete_role_of_the_user(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-        $id = $request->id;
-        $role = Role::findOrFail($id);
-        $role->users()->detach($primaryKeyId);
+        $user = User::withTrashed()->findOrFail($request->primaryKeyId);
+        $user->roles()->detach($request->idDataField);
         return response()->json(['success' => true]);
     }
 
     public function get_roles_array()
     {
-        return response()->json(['success' => true, 'data' => Role::all()->map->name]);
+        $users = Role::select([
+            'id AS value',
+            'name AS name',
+        ])->get();
+        return response()->json(['data' => $users]);
     }
 }

@@ -1,10 +1,10 @@
 import React from 'react'
-import { Crud, FieldTypes, MultiSelectOptionsColumns } from '@sefirosweb/react-crud'
+import { ColumnDefinition, Crud, FieldTypes, MultiSelectOptionsColumns } from '@sefirosweb/react-crud'
 import { APP_URL } from '@/types/configurationType';
 
 export default () => {
 
-    const multiSelectRole: MultiSelectOptionsColumns<any> = {
+    const multiSelectRole: MultiSelectOptionsColumns<Role> = {
         primaryKey: 'id',
         url: `${APP_URL}/user/roles`,
         getDataUrl: `${APP_URL}/user/roles/get_array`,
@@ -18,12 +18,57 @@ export default () => {
                 accessorKey: 'name'
             },
             {
-                header: 'Descripcion',
-                accessorKey: 'descripcion'
+                header: 'Description',
+                accessorKey: 'description'
             },
         ],
     }
 
+    const columns: Array<ColumnDefinition<User>> = [
+        {
+            accessorKey: 'id',
+            header: '#',
+            enableSorting: true,
+            visible: true
+        },
+        {
+            accessorKey: 'name',
+            header: 'Name',
+            titleOnCRUD: 'Name',
+            editable: true,
+            enableSorting: true,
+        },
+        {
+            accessorKey: 'email',
+            titleOnCRUD: 'Email',
+            header: 'Email',
+            editable: true,
+            enableSorting: true,
+        },
+        {
+            accessorKey: 'deleted_at',
+            titleOnCRUD: 'Deleted At',
+            header: 'Deleted At',
+            editable: false,
+            enableSorting: true,
+        },
+        {
+            id: 'roles',
+            titleOnCRUD: 'Roles',
+            header: 'Roles',
+            editable: true,
+            fieldType: FieldTypes.MULTISELECT,
+            multiSelectOptions: multiSelectRole
+        },
+        {
+            accessorKey: 'password',
+            titleOnCRUD: 'Password',
+            header: 'Password',
+            visible: false,
+            editable: true,
+            fieldType: FieldTypes.PASSWORD
+        },
+    ]
 
     return (
         <>
@@ -36,50 +81,8 @@ export default () => {
                 createButtonTitle="Create User"
                 crudUrl={`${APP_URL}/users`}
                 primaryKey="id"
-                titleOnDelete="name"
-                columns={[
-                    {
-                        header: '#',
-                        accessorKey: 'id',
-                        enableSorting: true,
-                        visible: true
-                    },
-                    {
-                        accessorKey: 'name',
-                        header: 'Name',
-                        titleOnCRUD: 'Name',
-                        editable: true,
-                        enableSorting: true,
-                    },
-                    {
-                        accessorKey: 'email',
-                        titleOnCRUD: 'Email',
-                        header: 'Email',
-                        editable: true,
-                        enableSorting: true,
-                    },
-                    {
-                        accessorKey: 'roles',
-                        titleOnCRUD: 'Roles',
-                        header: 'Roles',
-                        editable: true,
-                        fieldType: FieldTypes.MULTISELECT,
-                        multiSelectOptions: multiSelectRole
-                    },
-                    {
-                        accessorKey: 'password',
-                        titleOnCRUD: 'Password',
-                        header: 'Password',
-                        visible: false,
-                        editable: true,
-                        fieldType: FieldTypes.PASSWORD
-                    },
-                    {
-                        accessorKey: 'is_active',
-                        header: 'Active',
-                        editable: false
-                    }
-                ]}
+                titleOnDelete="email"
+                columns={columns}
             />
         </>
     );

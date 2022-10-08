@@ -9,7 +9,7 @@ import Users from '@/pages/Users';
 import Roles from '@/pages/Roles';
 import AccessList from '@/pages/AccessList';
 
-function RoutesPages() {
+export default () => {
     return (
         <Routes>
             <Route path={`${APP_PREFIX}/`} element={<Layout />}>
@@ -24,6 +24,5 @@ function RoutesPages() {
     );
 }
 
-export default RoutesPages;
 
 

@@ -17,7 +17,7 @@ class CheckACLMiddleware
      */
     public function handle(Request $request, Closure $next, $acl)
     {
-        if (!request()->user() || request()->user()->is_active === 0) {
+        if (!request()->user()) {
             if ($request->ajax()) {
                 return response()
                     ->json(['message'   => "You don't have permissions for this site"])

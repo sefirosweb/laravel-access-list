@@ -62,13 +62,19 @@ export default () => {
                         break;
                     case 422:
                         const error_422 = `
-                        <div>${error.response.data.message}</div>
+                        <div>Error tipo: ${error.response.data.message}</div>
+                        <ul>
+                        ${Object
+                                .keys(error.response.data.errors)
+                                .map(
+                                    (name) => {
+                                        console.log(error.response.data.errors)
+                                        return error.response.data.errors[name].map((e: string) => `<li>${e}</li>`).join('')
+                                    }
+                                )
+                                .join('')}
+                        </ul>`
 
-                        ${Object.keys(error.response.data.errors).map(
-                            (name) => {
-                                return error.response.data.errors[name].map((e: string) => `<div>${e}</div>`);
-                            }
-                        )}`;
 
                         toastr.warning(error_422, `Unprocessable Entity`);
                         break;

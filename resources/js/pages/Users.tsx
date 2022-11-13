@@ -1,8 +1,17 @@
-import React from 'react'
-import { ColumnDefinition, Crud, FieldTypes, MultiSelectOptionsColumns } from '@sefirosweb/react-crud'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { ColumnDefinition, Crud, CrudPropsRef, FieldTypes, MultiSelectOptionsColumns } from '@sefirosweb/react-crud'
 import { APP_URL } from '@/types/configurationType';
+import { Col, Form, Row } from 'react-bootstrap';
 
 export default () => {
+    const crudRef = useRef<CrudPropsRef>(null);
+    const [filters, setFilters] = useState("active");
+
+    useEffect(() => {
+        // crudRef.current.setLazyilters({ status: filters });
+        console.log('Filter changed', filters)
+    }, [filters])
+
 
     const multiSelectRole: MultiSelectOptionsColumns<Role> = {
         primaryKey: 'id',
@@ -70,9 +79,25 @@ export default () => {
         },
     ]
 
+    const customFilters = (
+        <Row>
+            <Col sm={12} md={'auto'} className='mt-3'>
+                <Form.Select
+                    value={filters}
+                    onChange={(e) => setFilters(e.target.value)}
+                >
+                    <option value="active">Active</option>
+                    <option value="all">All</option>
+                    <option value="deleted">Deleted</option>
+                </Form.Select>
+            </Col>
+        </Row>
+    )
+
     return (
         <>
             <h1>Users</h1>
+            {customFilters}
             <Crud
                 canDelete
                 canEdit
@@ -83,6 +108,7 @@ export default () => {
                 primaryKey="id"
                 titleOnDelete="email"
                 columns={columns}
+            // ref={crudRef}
             />
         </>
     );

@@ -16,11 +16,20 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function get()
+    public function get(Request $request)
     {
-        return response()->json(['success' => true, 'data' => User::withTrashed()->get([
+        $query = User::query();
+        if ($request->status === 'all') {
+            $query->withTrashed();
+        } else  if ($request->status === 'deleted') {
+            $query->onlyTrashed();
+        }
+
+        $data = $query->get([
             'id', 'name', 'email', 'deleted_at'
-        ])]);
+        ]);
+
+        return response()->json(['success' => true, 'data' => $data]);
     }
 
     /**

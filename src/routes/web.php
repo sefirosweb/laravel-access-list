@@ -45,6 +45,8 @@ Route::group([
     Route::get('roles', 'RoleController@get');
     Route::get('access_list', 'AccessListController@get');
 
+    Route::get('get_user_fillable_data', 'UserController@get_fillable_data');
+
     Route::get('/', function () {
         return view('acl::index');
     });

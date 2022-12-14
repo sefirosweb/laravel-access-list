@@ -46,4 +46,9 @@ class User extends ModelsUser
 
         return false;
     }
+
+    public function getSoftDeletingAttribute()
+    {
+        return in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses(ModelsUser::class));
+    }
 }

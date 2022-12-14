@@ -114,4 +114,18 @@ class UserController extends Controller
         ])->get();
         return response()->json(['data' => $users]);
     }
+
+    public function get_fillable_data()
+    {
+
+        $model = new User;
+        $fillable = $model->getFillable();
+        $hidden = $model->getHidden();
+        $softDelete = $model->getSoftDeletingAttribute();
+        return response()->json(['data' => [
+            'fillable' => $fillable,
+            'hidden' => $hidden,
+            'softDelete' => $softDelete,
+        ]]);
+    }
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ColumnDefinition, Crud, CrudPropsRef, FieldTypes, MultiSelectOptionsColumns } from '@sefirosweb/react-crud'
 import { APP_URL } from '@/types/configurationType';
 import { Col, Form, Row } from 'react-bootstrap';
+import axios from 'axios';
 
 export default () => {
     const crudRef = useRef<CrudPropsRef>(null);
@@ -9,7 +10,7 @@ export default () => {
 
     useEffect(() => {
         // crudRef.current.setLazyilters({ status: filters });
-        console.log('Filter changed', filters)
+        axios.get(`${APP_URL}/get_user_fillable_data`)
     }, [filters])
 
 

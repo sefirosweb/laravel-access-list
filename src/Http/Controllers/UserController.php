@@ -4,10 +4,10 @@ namespace Sefirosweb\LaravelAccessList\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Hash;
 use Sefirosweb\LaravelAccessList\Http\Models\Role;
 use Sefirosweb\LaravelAccessList\Http\Models\User;
-use Sefirosweb\LaravelAccessList\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
@@ -38,7 +38,7 @@ class UserController extends Controller
      * @param  \Illuminate\Http\UserRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(Request $request)
     {
         $request->merge([
             'password' => $request->password ? Hash::make($request->password) : Hash::make('guest')
@@ -52,10 +52,9 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\UserRequest $request
-     * @param  \App\Models\User $user
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, User $user)
+    public function update(Request $request)
     {
         $update = $request->all();
         if (isset($update['password']) && $update['password']) {
@@ -117,15 +116,18 @@ class UserController extends Controller
 
     public function get_fillable_data()
     {
+        $model = new ModelsUser();
 
-        $model = new User;
+        $id = $model->getKeyName();
         $fillable = $model->getFillable();
         $hidden = $model->getHidden();
-        $softDelete = $model->getSoftDeletingAttribute();
-        return response()->json(['data' => [
+        $softDelete = in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($model));
+
+        return response()->json([
+            'id' => $id,
             'fillable' => $fillable,
             'hidden' => $hidden,
             'softDelete' => $softDelete,
-        ]]);
+        ]);
     }
 }

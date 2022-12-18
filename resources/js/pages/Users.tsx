@@ -6,15 +6,24 @@ import axios from 'axios';
 
 type ModelDefinition = {
     id: string,
-    fillable: Array<string>,
+    columns: Array<{
+        field: string,
+        fieldType: string,
+    }>,
     hidden: Array<string>,
     softDelete: boolean
+}
+
+const getFieldType = (type: string): FieldTypes => {
+    if (type === 'number') return FieldTypes.NUMBER
+    if (type === 'datetime') return FieldTypes.DATE
+    return FieldTypes.TEXT
 }
 
 export default () => {
     const crudRef = useRef<CrudPropsRef>(null);
     const [filters, setFilters] = useState("active");
-    const [columns, setColumns] = useState<Array<ColumnDefinition<any>>>([]);
+    const [tableColumns, setTableColumns] = useState<Array<ColumnDefinition<any>>>([]);
     const [primaryId, setPrimaryId] = useState("");
     const [isSoftDelete, setIsSoftDelete] = useState(false)
 
@@ -43,16 +52,19 @@ export default () => {
 
         axios.get<ModelDefinition>(`${APP_URL}/get_user_fillable_data`)
             .then((response) => {
-                const { id, fillable, hidden, softDelete } = response.data
+                const { id, columns, hidden, softDelete } = response.data
 
                 setPrimaryId(id)
                 setIsSoftDelete(softDelete)
 
-                const newColumns = fillable.map<ColumnDefinition<any>>((column) => {
+                // For a now ignore getFieldTypEError
+                //@ts-ignore
+                const newColumns = columns.map<ColumnDefinition<any>>((column) => {
                     return {
-                        header: column,
-                        accessorKey: column,
-                        visible: hidden.findIndex(columnHidden => columnHidden === column) < 0,
+                        header: column.field,
+                        accessorKey: column.field,
+                        visible: hidden.findIndex(columnHidden => columnHidden === column.field) < 0,
+                        fieldType: getFieldType(column.fieldType),
                         editable: true
                     }
                 })
@@ -71,7 +83,7 @@ export default () => {
                     multiSelectOptions: multiSelectRole
                 })
 
-                setColumns(newColumns)
+                setTableColumns(newColumns)
             })
     }, [filters])
 
@@ -103,7 +115,7 @@ export default () => {
                 crudUrl={`${APP_URL}/users`}
                 primaryKey={primaryId}
                 titleOnDelete="email"
-                columns={columns}
+                columns={tableColumns}
                 ref={crudRef}
             />
         </>

@@ -5,6 +5,7 @@ namespace Sefirosweb\LaravelAccessList\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User as ModelsUser;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Sefirosweb\LaravelAccessList\Http\Models\Role;
 use Sefirosweb\LaravelAccessList\Http\Models\User;
@@ -123,9 +124,33 @@ class UserController extends Controller
         $hidden = $model->getHidden();
         $softDelete = in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($model));
 
+        $columns = DB::select('describe users');
+        $columns = array_filter($columns, fn ($row) => in_array($row->Field, $fillable));
+        $columns = array_map(function ($row) {
+            $fieldType = 'text';
+
+            if (str_contains($row->Type, 'varchar')) {
+                $fieldType = 'text';
+            }
+
+            if (str_contains($row->Type, 'int')) {
+                $fieldType = 'number';
+            }
+
+            if (str_contains($row->Type, 'timestamp')) {
+                $fieldType = 'datetime';
+            }
+
+            return [
+                'field' => $row->Field,
+                'fieldType' => $fieldType
+            ];
+        }, $columns);
+        $columns = array_values($columns);
+
         return response()->json([
             'id' => $id,
-            'fillable' => $fillable,
+            'columns' => $columns,
             'hidden' => $hidden,
             'softDelete' => $softDelete,
         ]);

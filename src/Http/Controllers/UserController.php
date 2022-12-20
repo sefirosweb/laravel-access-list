@@ -88,30 +88,30 @@ class UserController extends Controller
 
     public function get_roles_from_user(Request $request)
     {
-        $user = User::withTrashed()->with('roles:id,name,description')->findOrFail($request->primaryKeyId);
+        $user = User::withTrashed()->with('roles:id,name,description')->findOrFail($request->user_id);
         return response()->json(['success' => true, 'data' => $user->roles]);
     }
 
     public function add_role_to_user(Request $request)
     {
-        $user = User::withTrashed()->findOrFail($request->primaryKeyId);
-        $user->roles()->syncWithoutDetaching($request->name['value']);
+        $user = User::withTrashed()->findOrFail($request->user_id);
+        $user->roles()->syncWithoutDetaching($request->id);
         return response()->json(['success' => true]);
     }
 
     public function delete_role_of_the_user(Request $request)
     {
-        $user = User::withTrashed()->findOrFail($request->primaryKeyId);
-        $user->roles()->detach($request->idDataField);
+        $user = User::withTrashed()->findOrFail($request->user_id);
+        $user->roles()->detach($request->id);
         return response()->json(['success' => true]);
     }
 
     public function get_roles_array()
     {
-        $users = Role::select([
-            'id AS value',
-            'name AS name',
-        ])->get();
+        $users = Role::get()->map(function ($row) {
+            $row['value'] = $row->id;
+            return $row;
+        });
         return response()->json(['data' => $users]);
     }
 

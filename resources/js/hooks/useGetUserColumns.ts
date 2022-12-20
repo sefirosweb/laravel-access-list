@@ -14,6 +14,8 @@ export const useGetUserColumns = (): Props => {
 
     const multiSelectRole: MultiSelectOptionsColumns<Role> = {
         primaryKey: 'id',
+        sentKeyAs: "user_id",
+        lazyLoad: true,
         url: `${APP_URL}/user/roles`,
         getDataUrl: `${APP_URL}/user/roles/get_array`,
         columns: [

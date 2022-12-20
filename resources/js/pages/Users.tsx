@@ -1,20 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { ColumnDefinition, Crud, CrudPropsRef, FieldTypes, MultiSelectOptionsColumns } from '@sefirosweb/react-crud'
+import { Crud, CrudPropsRef } from '@sefirosweb/react-crud'
 import { APP_URL } from '@/types/configurationType';
 import { Col, Form, Row } from 'react-bootstrap';
-import axios from 'axios';
 import { useGetUserColumns } from '@/hooks/useGetUserColumns';
-import { useGetFieldType } from '@/hooks/useGetFieldType';
-
-type ModelDefinition = {
-    id: string,
-    columns: Array<{
-        field: string,
-        fieldType: string,
-    }>,
-    hidden: Array<string>,
-    softDelete: boolean
-}
 
 export default () => {
     const crudRef = useRef<CrudPropsRef>(null);
@@ -48,7 +36,7 @@ export default () => {
                 canEdit
                 canRefresh
                 enableGlobalFilter
-                customButtons={customFilters}
+                // customButtons={customFilters}
                 createButtonTitle="Create User"
                 crudUrl={`${APP_URL}/users`}
                 primaryKey={primaryId}

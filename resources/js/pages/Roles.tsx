@@ -6,6 +6,7 @@ export default () => {
 
     const multiSelectUser: MultiSelectOptionsColumns<User> = {
         primaryKey: 'id',
+        sentKeyAs: "role_id",
         url: `${APP_URL}/role/users`,
         getDataUrl: `${APP_URL}/role/users/get_array`,
         columns: [
@@ -26,6 +27,7 @@ export default () => {
 
     const multiSelectAccessList: MultiSelectOptionsColumns<AccessList> = {
         primaryKey: 'id',
+        sentKeyAs: 'role_id',
         url: `${APP_URL}/role/access_lists`,
         getDataUrl: `${APP_URL}/role/access_lists/get_array`,
         columns: [

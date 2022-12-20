@@ -60,72 +60,62 @@ class RoleController extends Controller
         return response()->json(['success' => true]);
     }
 
-
     public function get_users_from_role(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-
-        $users = User::whereHas('roles', function ($query) use ($primaryKeyId) {
-            $query->where('id', $primaryKeyId);
-        })->get();
-
-        return response()->json(['success' => true, 'data' => $users]);
+        $role = Role::with('users')->findOrFail($request->role_id);
+        return response()->json(['success' => true, 'data' => $role->users]);
     }
+
     public function add_user_to_role(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-        $name = $request->name;
-        $user = User::firstWhere('email', $name);
-        if (!$user) return response("Data not found", 404);
-
-        $user->roles()->syncWithoutDetaching($primaryKeyId);
-        return response()->json(['success' => true, 'data' => $user]);
+        $role = Role::findOrFail($request->role_id);
+        $role->users()->syncWithoutDetaching($request->id);
+        return response()->json(['success' => true]);
     }
+
     public function delete_user_of_the_role(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-        $id = $request->id;
-        $user = User::findOrFail($id);
-        $user->roles()->detach($primaryKeyId);
+        $role = Role::findOrFail($request->role_id);
+        $role->users()->detach($request->id);
         return response()->json(['success' => true]);
     }
 
     public function get_access_list_from_role(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-
-        $accessLists = AccessList::whereHas('roles', function ($query) use ($primaryKeyId) {
-            $query->where('id', $primaryKeyId);
-        })->get();
-
-        return response()->json(['success' => true, 'data' => $accessLists]);
+        $role = Role::findOrFail($request->role_id);
+        return response()->json(['success' => true, 'data' => $role->access_lists]);
     }
+
     public function add_access_list_to_role(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-        $name = $request->name;
-        $accessList = AccessList::firstWhere('name', $name);
-        if (!$accessList) return response("Data not found", 404);
-
-        $accessList->roles()->syncWithoutDetaching($primaryKeyId);
-        return response()->json(['success' => true, 'data' => $accessList]);
+        $role = Role::findOrFail($request->role_id);
+        $role->access_lists()->syncWithoutDetaching($request->id);
+        return response()->json(['success' => true]);
     }
+
     public function delete_access_list_of_the_role(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-        $id = $request->id;
-        $accessList = AccessList::findOrFail($id);
-        $accessList->roles()->detach($primaryKeyId);
+        $role = Role::findOrFail($request->role_id);
+        $role->access_lists()->detach($request->id);
         return response()->json(['success' => true]);
     }
 
     public function get_users_array()
     {
-        return response()->json(['success' => true, 'data' => User::all()->map->email]);
+        $users = User::get()->map(function ($row) {
+            $row['value'] = $row->id;
+            $row['name'] = $row->email;
+            return $row;
+        });
+        return response()->json(['data' => $users]);
     }
 
     public function get_acl_array()
     {
-        return response()->json(['success' => true, 'data' => AccessList::all()->map->name]);
+        $users = AccessList::get()->map(function ($row) {
+            $row['value'] = $row->id;
+            return $row;
+        });
+        return response()->json(['data' => $users]);
     }
 }

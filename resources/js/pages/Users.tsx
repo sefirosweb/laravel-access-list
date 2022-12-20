@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Crud, CrudPropsRef } from '@sefirosweb/react-crud'
+import { Crud, CrudPropsRef, useGetQueryClient } from '@sefirosweb/react-crud'
 import { APP_URL } from '@/types/configurationType';
 import { Col, Form, Row } from 'react-bootstrap';
 import { useGetUserColumns } from '@/hooks/useGetUserColumns';
@@ -8,6 +8,7 @@ export default () => {
     const crudRef = useRef<CrudPropsRef>(null);
     const [filters, setFilters] = useState("active");
     const [primaryId, tableColumns, isSoftDelete] = useGetUserColumns();
+    const queryClient = useGetQueryClient();
 
     useEffect(() => {
         crudRef.current.setLazyilters({ status: filters });
@@ -43,6 +44,11 @@ export default () => {
                 titleOnDelete="email"
                 columns={tableColumns}
                 ref={crudRef}
+                handleSuccess={() => {
+                    queryClient.removeQueries({
+                        queryKey: [`${APP_URL}/role/users/get_array`]
+                    })
+                }}
             />
         </>
     );

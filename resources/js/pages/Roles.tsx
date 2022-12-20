@@ -1,8 +1,9 @@
 import React from 'react';
 import { APP_URL } from '@/types/configurationType';
-import { ColumnDefinition, Crud, FieldTypes, MultiSelectOptionsColumns } from '@sefirosweb/react-crud'
+import { ColumnDefinition, Crud, FieldTypes, MultiSelectOptionsColumns, useGetQueryClient } from '@sefirosweb/react-crud'
 
 export default () => {
+    const queryClient = useGetQueryClient();
 
     const multiSelectUser: MultiSelectOptionsColumns<User> = {
         primaryKey: 'id',
@@ -99,6 +100,14 @@ export default () => {
                 primaryKey="id"
                 titleOnDelete="name"
                 columns={columns}
+                handleSuccess={() => {
+                    queryClient.removeQueries({
+                        queryKey: [`${APP_URL}/user/roles/get_array`]
+                    })
+                    queryClient.removeQueries({
+                        queryKey: [`${APP_URL}/access_list/roles/get_array`]
+                    })
+                }}
             />
         </>
     );

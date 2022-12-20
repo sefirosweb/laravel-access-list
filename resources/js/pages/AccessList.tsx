@@ -5,6 +5,7 @@ import { APP_URL } from '@/types/configurationType';
 export default () => {
     const multiSelectRole: MultiSelectOptionsColumns<any> = {
         primaryKey: 'id',
+        sentKeyAs: 'access_list_id',
         url: `${APP_URL}/access_list/roles`,
         getDataUrl: `${APP_URL}/access_list/roles/get_array`,
         columns: [

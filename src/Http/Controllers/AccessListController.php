@@ -61,34 +61,30 @@ class AccessListController extends Controller
 
     public function get_roles_from_access_list(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-
-        $roles = Role::whereHas('access_lists', function ($query) use ($primaryKeyId) {
-            $query->where('id', $primaryKeyId);
-        })->get();
-
-        return response()->json(['success' => true, 'data' => $roles]);
+        $accessList = AccessList::findOrFail($request->access_list_id);
+        return response()->json(['success' => true, 'data' => $accessList->roles]);
     }
+
     public function add_role_to_access_list(Request $request)
     {
-        $primaryKeyId = $request->primaryKeyId;
-        $name = $request->name;
-        $role = Role::firstWhere('name', $name);
-        if (!$role) return response("Data not found", 404);
-
-        $role->access_lists()->syncWithoutDetaching($primaryKeyId);
-        return response()->json(['success' => true, 'data' => $role]);
-    }
-    public function delete_role_of_the_access_list(Request $request)
-    {
-        $primaryKeyId = $request->primaryKeyId;
-        $id = $request->id;
-        $role = Role::findOrFail($id);
-        $role->access_lists()->detach($primaryKeyId);
+        $accessList = AccessList::findOrFail($request->access_list_id);
+        $accessList->roles()->syncWithoutDetaching($request->id);
         return response()->json(['success' => true]);
     }
+
+    public function delete_role_of_the_access_list(Request $request)
+    {
+        $accessList = AccessList::findOrFail($request->access_list_id);
+        $accessList->roles()->detach($request->id);
+        return response()->json(['success' => true]);
+    }
+
     public function get_roles_array()
     {
-        return response()->json(['success' => true, 'data' => Role::all()->map->name]);
+        $role = Role::get()->map(function ($row) {
+            $row['value'] = $row->id;
+            return $row;
+        });
+        return response()->json(['data' => $role]);
     }
 }

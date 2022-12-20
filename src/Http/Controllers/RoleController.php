@@ -112,10 +112,10 @@ class RoleController extends Controller
 
     public function get_acl_array()
     {
-        $users = AccessList::get()->map(function ($row) {
+        $accessList = AccessList::get()->map(function ($row) {
             $row['value'] = $row->id;
             return $row;
         });
-        return response()->json(['data' => $users]);
+        return response()->json(['data' => $accessList]);
     }
 }

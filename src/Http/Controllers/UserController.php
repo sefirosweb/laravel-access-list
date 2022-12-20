@@ -26,9 +26,7 @@ class UserController extends Controller
             $query->onlyTrashed();
         }
 
-        $data = $query->get([
-            'id', 'name', 'email', 'deleted_at'
-        ]);
+        $data = $query->get();
 
         return response()->json(['success' => true, 'data' => $data]);
     }

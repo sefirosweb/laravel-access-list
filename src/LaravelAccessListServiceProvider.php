@@ -15,7 +15,7 @@ class LaravelAccessListServiceProvider extends ServiceProvider
         $this->registerRoutes();
 
         $this->publishes([
-            __DIR__ . '/../public/vendor/laravel-access-list' => public_path('vendor/laravel-access-list'),
+            __DIR__ . '/../public' => public_path('vendor/laravel-access-list'),
         ], 'view');
 
         $this->publishes([

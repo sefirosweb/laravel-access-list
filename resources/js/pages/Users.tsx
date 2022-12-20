@@ -3,6 +3,8 @@ import { ColumnDefinition, Crud, CrudPropsRef, FieldTypes, MultiSelectOptionsCol
 import { APP_URL } from '@/types/configurationType';
 import { Col, Form, Row } from 'react-bootstrap';
 import axios from 'axios';
+import { useGetUserColumns } from '@/hooks/useGetUserColumns';
+import { useGetFieldType } from '@/hooks/useGetFieldType';
 
 type ModelDefinition = {
     id: string,
@@ -14,77 +16,13 @@ type ModelDefinition = {
     softDelete: boolean
 }
 
-const getFieldType = (type: string): FieldTypes => {
-    if (type === 'number') return FieldTypes.NUMBER
-    if (type === 'datetime') return FieldTypes.DATE
-    return FieldTypes.TEXT
-}
-
 export default () => {
     const crudRef = useRef<CrudPropsRef>(null);
     const [filters, setFilters] = useState("active");
-    const [tableColumns, setTableColumns] = useState<Array<ColumnDefinition<any>>>([]);
-    const [primaryId, setPrimaryId] = useState("");
-    const [isSoftDelete, setIsSoftDelete] = useState(false)
-
-    const multiSelectRole: MultiSelectOptionsColumns<Role> = {
-        primaryKey: 'id',
-        url: `${APP_URL}/user/roles`,
-        getDataUrl: `${APP_URL}/user/roles/get_array`,
-        columns: [
-            {
-                header: '#',
-                accessorKey: 'id'
-            },
-            {
-                header: 'Name',
-                accessorKey: 'name'
-            },
-            {
-                header: 'Description',
-                accessorKey: 'description'
-            },
-        ],
-    }
+    const [primaryId, tableColumns, isSoftDelete] = useGetUserColumns();
 
     useEffect(() => {
         crudRef.current.setLazyilters({ status: filters });
-
-        axios.get<ModelDefinition>(`${APP_URL}/get_user_fillable_data`)
-            .then((response) => {
-                const { id, columns, hidden, softDelete } = response.data
-
-                setPrimaryId(id)
-                setIsSoftDelete(softDelete)
-
-                // For a now ignore getFieldTypEError
-                //@ts-ignore
-                const newColumns = columns.map<ColumnDefinition<any>>((column) => {
-                    return {
-                        header: column.field,
-                        accessorKey: column.field,
-                        visible: hidden.findIndex(columnHidden => columnHidden === column.field) < 0,
-                        fieldType: getFieldType(column.fieldType),
-                        editable: true
-                    }
-                })
-
-                newColumns.unshift({
-                    accessorKey: id,
-                    visible: false
-                })
-
-                newColumns.push({
-                    id: 'roles',
-                    titleOnCRUD: 'Roles',
-                    header: 'Roles',
-                    editable: true,
-                    fieldType: FieldTypes.MULTISELECT,
-                    multiSelectOptions: multiSelectRole
-                })
-
-                setTableColumns(newColumns)
-            })
     }, [filters])
 
     const customFilters = isSoftDelete && (

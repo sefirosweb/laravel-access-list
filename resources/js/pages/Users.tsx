@@ -37,7 +37,7 @@ export default () => {
                 canEdit
                 canRefresh
                 enableGlobalFilter
-                // customButtons={customFilters}
+                customButtons={customFilters}
                 createButtonTitle="Create User"
                 crudUrl={`${APP_URL}/users`}
                 primaryKey={primaryId}

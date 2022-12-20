@@ -20,10 +20,13 @@ class UserController extends Controller
     public function get(Request $request)
     {
         $query = User::query();
-        if ($request->status === 'all') {
-            $query->withTrashed();
-        } else  if ($request->status === 'deleted') {
-            $query->onlyTrashed();
+
+        if ($this->enabledSoftDelete()) {
+            if ($request->status === 'all') {
+                $query->withTrashed();
+            } else  if ($request->status === 'deleted') {
+                $query->onlyTrashed();
+            }
         }
 
         $data = $query->get();
@@ -62,7 +65,12 @@ class UserController extends Controller
             unset($update['password']);
         }
 
-        $user = User::withTrashed()->findOrFail($request->id);
+        if ($this->enabledSoftDelete()) {
+            $user = User::withTrashed()->findOrFail($request->id);
+        } else {
+            $user = User::findOrFail($request->id);
+        }
+
         $user->update($update);
         return response()->json(['success' => true]);
     }
@@ -75,31 +83,51 @@ class UserController extends Controller
      */
     public function destroy(Request $request)
     {
-        $user = User::withTrashed()->findOrFail($request->id);
-        if (!$user->deleted_at) {
-            $user->delete();
+        if ($this->enabledSoftDelete()) {
+            $user = User::withTrashed()->findOrFail($request->id);
+            if (!$user->deleted_at) {
+                $user->delete();
+            } else {
+                $user->restore();
+            }
         } else {
-            $user->restore();
+            $user = User::findOrFail($request->id);
+            $user->delete();
         }
+
         return response()->json(['success' => true]);
     }
 
     public function get_roles_from_user(Request $request)
     {
-        $user = User::withTrashed()->with('roles:id,name,description')->findOrFail($request->user_id);
+        if ($this->enabledSoftDelete()) {
+            $user = User::withTrashed()->with('roles:id,name,description')->findOrFail($request->user_id);
+        } else {
+            $user = User::with('roles:id,name,description')->findOrFail($request->user_id);
+        }
+
         return response()->json(['success' => true, 'data' => $user->roles]);
     }
 
     public function add_role_to_user(Request $request)
     {
-        $user = User::withTrashed()->findOrFail($request->user_id);
+        if ($this->enabledSoftDelete()) {
+            $user = User::withTrashed()->findOrFail($request->user_id);
+        } else {
+            $user = User::findOrFail($request->user_id);
+        }
+
         $user->roles()->syncWithoutDetaching($request->id);
         return response()->json(['success' => true]);
     }
 
     public function delete_role_of_the_user(Request $request)
     {
-        $user = User::withTrashed()->findOrFail($request->user_id);
+        if ($this->enabledSoftDelete()) {
+            $user = User::withTrashed()->findOrFail($request->user_id);
+        } else {
+            $user = User::findOrFail($request->user_id);
+        }
         $user->roles()->detach($request->id);
         return response()->json(['success' => true]);
     }
@@ -111,6 +139,12 @@ class UserController extends Controller
             return $row;
         });
         return response()->json(['data' => $users]);
+    }
+
+    private function enabledSoftDelete()
+    {
+        $model = new ModelsUser();
+        return in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($model));
     }
 
     public function get_fillable_data()

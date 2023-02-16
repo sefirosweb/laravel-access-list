@@ -16,12 +16,6 @@
     ],
     "minimum-stability": "dev",
     "require": {},
-    "post-install-cmd": [
-        "@php artisan vendor:publish --provider='Sefirosweb\\LaravelAccessList\\LaravelAccessListServiceProvider'  --tag=view --force"
-    ],
-    "post-update-cmd": [
-        "@php artisan vendor:publish --provider='Sefirosweb\\LaravelAccessList\\LaravelAccessListServiceProvider'  --tag=view --force"
-    ],
     "extra": {
         "laravel": {
             "providers": [

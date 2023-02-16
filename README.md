@@ -44,7 +44,7 @@ php artisan migrate
 Publish React front:
 
 ```
-php artisan vendor:publish --provider="Sefirosweb\LaravelAccessList\LaravelAccessListServiceProvider"  --tag=view --force
+php artisan vendor:publish --provider="Sefirosweb\LaravelAccessList\LaravelAccessListServiceProvider"  --tag=acl-assets --force
 ```
 
 If you need edit prefix of tool or middleware you can publish the config:

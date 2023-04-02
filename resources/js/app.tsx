@@ -1,22 +1,20 @@
+
 import React from "react";
-import { createRoot } from "react-dom/client";
+import axios from "axios";
+import ReactDOM from 'react-dom/client'
+import { i18nInstance, axiosInstance as crudAxiosInstance } from '@sefirosweb/react-crud'
+import { error, response } from "@/lib/axios.interceptors";
+import "@/lib/toastrInstance";
+import '@sass/app.scss'
 import RoutesConfig from "@/routes/RoutesConfig";
-import { useGetQueryClient } from "@sefirosweb/react-crud";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 
-if (document.getElementById("root")) {
-  const root = createRoot(document.getElementById("root"));
+crudAxiosInstance.interceptors.response.use(response, error);
+axios.interceptors.response.use(response, error);
 
-  const queryClient = useGetQueryClient()
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <React.StrictMode>
+    <RoutesConfig />
+  </React.StrictMode>,
+);
 
-  root.render(
-    <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <RoutesConfig />
-        <ReactQueryDevtools />
-      </QueryClientProvider>
-    </React.StrictMode>,
-  );
-}

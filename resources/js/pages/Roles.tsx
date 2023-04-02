@@ -2,7 +2,7 @@ import React from 'react';
 import { APP_URL } from '@/types/configurationType';
 import { ColumnDefinition, Crud, FieldTypes, MultiSelectOptionsColumns, useGetQueryClient } from '@sefirosweb/react-crud'
 
-export default () => {
+export const Roles = () => {
     const queryClient = useGetQueryClient();
 
     const multiSelectUser: MultiSelectOptionsColumns<User> = {

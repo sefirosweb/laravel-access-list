@@ -1,13 +1,12 @@
 import React from 'react'
 import { Routes, Route, Navigate } from "react-router-dom";
-
-/* Pages */
 import { APP_PREFIX } from "@/types/configurationType";
-import NotFound from "@/pages/NotFound";
-import Layout from '@/pages/layout/Layout';
-import Users from '@/pages/Users';
-import Roles from '@/pages/Roles';
-import AccessList from '@/pages/AccessList';
+
+import { Layout } from '@/pages/layout/Layout';
+import { NotFound } from "@/pages/NotFound";
+import { Users } from '@/pages/Users';
+import { Roles } from '@/pages/Roles';
+import { AccessList } from '@/pages/AccessList';
 
 export default () => {
     return (
@@ -17,7 +16,6 @@ export default () => {
                 <Route path={`view/users`} element={<Users />} />
                 <Route path={`view/roles`} element={<Roles />} />
                 <Route path={`view/access_list`} element={<AccessList />} />
-
                 <Route path="*" element={<NotFound />} />
             </Route>
         </Routes>

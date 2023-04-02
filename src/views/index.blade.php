@@ -1,16 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"
-        integrity="sha512-YWzhKL2whUzgiheMoBFwW8CKV4qpHQAEuvilg9FAn5VJUDwKZZxkJNuGM4XkWuk94WCrrwslk8yWNGmY1EduTA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-    <link rel="stylesheet" href="{{ asset('vendor/laravel-access-list/css/app.css') }}" />
 
     <title>{{ config('app.name') }} - ACL System</title>
 </head>
@@ -22,7 +16,10 @@
         window.APP_URL = '{{ config('app.url') }}/' + APP_PREFIX
     </script>
 
-    <script src="{{ asset('vendor/laravel-access-list/js/app.js') }}"></script>
+    {{ Vite::useHotFile(storage_path('app/vite_acl.hot'))
+    // ->useBuildDirectory('bundle')
+    // ->useManifestFilename('assets.json')
+    ->withEntryPoints(['resources/js/app.tsx']) }}
 </body>
 
 </html>

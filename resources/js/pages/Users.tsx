@@ -4,7 +4,7 @@ import { APP_URL } from '@/types/configurationType';
 import { Col, Form, Row } from 'react-bootstrap';
 import { useGetUserColumns } from '@/hooks/useGetUserColumns';
 
-export default () => {
+export const Users = () => {
     const crudRef = useRef<CrudPropsRef>(null);
     const [filters, setFilters] = useState("active");
     const [primaryId, tableColumns, isSoftDelete] = useGetUserColumns();

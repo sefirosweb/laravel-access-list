@@ -5,13 +5,11 @@ namespace Sefirosweb\LaravelAccessList\Http\Models;
 use App\Models\User as ModelsUser;
 use DateTime;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Sefirosweb\LaravelAccessList\Http\Traits\SelfModelValidator;
 
 class User extends ModelsUser
 {
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-    }
+    use SelfModelValidator;
 
     public function getDeletedAtAttribute($date)
     {

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Sefirosweb\LaravelAccessList\Http\Models\Role;
 use Sefirosweb\LaravelAccessList\Http\Models\User;
 
@@ -42,27 +43,40 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        Validator::make($request->all(), User::getRules())->validate();
+
         $request->merge([
             'password' => $request->password ? Hash::make($request->password) : Hash::make('guest')
         ]);
 
-        User::create($request->all());
+        $rules = User::getRules();
+        unset($rules['password']);
+
+        $user = new User($request->all());
+        $user->changeRules($rules);
+        $user->save();
         return response()->json(['success' => true]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\UserRequest $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
+        $rules = User::getRules($request);
+
         $update = $request->all();
         if (isset($update['password']) && $update['password']) {
+            Validator::make($request->all(), $rules)->validate();
             $update['password'] = Hash::make($request->password);
+            unset($rules['password']);
         } else {
+            unset($rules['password']);
             unset($update['password']);
+            Validator::make($request->all(), $rules)->validate();
         }
 
         if ($this->enabledSoftDelete()) {
@@ -71,6 +85,7 @@ class UserController extends Controller
             $user = User::findOrFail($request->id);
         }
 
+        $user->changeRules($rules);
         $user->update($update);
         return response()->json(['success' => true]);
     }

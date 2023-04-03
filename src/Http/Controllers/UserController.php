@@ -173,11 +173,15 @@ class UserController extends Controller
 
         $columns = DB::select('describe users');
         $columns = array_filter($columns, fn ($row) => in_array($row->Field, $fillable));
-        $columns = array_map(function ($row) {
+        $columns = array_map(function ($row) use ($hidden) {
             $fieldType = 'text';
 
             if (str_contains($row->Type, 'varchar')) {
                 $fieldType = 'text';
+            }
+
+            if (str_contains($row->Type, 'varchar') && in_array($row->Field, $hidden)) {
+                $fieldType = 'password';
             }
 
             if (str_contains($row->Type, 'int')) {

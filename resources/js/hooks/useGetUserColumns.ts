@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getUserFillableData } from "@/api/getUserFillableData";
 import { useGetFieldType } from "./useGetFieldType";
 import { APP_URL } from "@/types/configurationType";
+import { useTranslation } from "react-i18next";
 
 type Props = [primaryId: string, tableColumns: Array<ColumnDefinition<any>>, isSoftDelete: boolean]
 
@@ -11,6 +12,8 @@ export const useGetUserColumns = (): Props => {
     const [tableColumns, setTableColumns] = useState<Array<ColumnDefinition<any>>>([]);
     const [primaryId, setPrimaryId] = useState("");
     const [isSoftDelete, setIsSoftDelete] = useState(false)
+    const { t, i18n } = useTranslation()
+
 
     const multiSelectRole: MultiSelectOptionsColumns<Role> = {
         primaryKey: 'id',
@@ -24,11 +27,11 @@ export const useGetUserColumns = (): Props => {
                 accessorKey: 'id'
             },
             {
-                header: 'Name',
+                header: t('Name'),
                 accessorKey: 'name'
             },
             {
-                header: 'Description',
+                header: t('Description'),
                 accessorKey: 'description'
             },
         ],
@@ -68,15 +71,15 @@ export const useGetUserColumns = (): Props => {
 
         newColumns.push({
             id: 'roles',
-            titleOnCRUD: 'Roles',
-            header: 'Roles',
+            titleOnCRUD: t('Roles'),
+            header: t('Roles'),
             editable: true,
             fieldType: FieldTypes.MULTISELECT,
             multiSelectOptions: multiSelectRole
         })
 
         setTableColumns(newColumns)
-    }, [data])
+    }, [data, i18n.language])
 
     return [primaryId, tableColumns, isSoftDelete]
 

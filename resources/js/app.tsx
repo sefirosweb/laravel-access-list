@@ -2,11 +2,12 @@
 import React from "react";
 import axios from "axios";
 import ReactDOM from 'react-dom/client'
-import { i18nInstance, axiosInstance as crudAxiosInstance } from '@sefirosweb/react-crud'
+import { axiosInstance as crudAxiosInstance } from '@sefirosweb/react-crud'
 import { error, response } from "@/lib/axios.interceptors";
 import "@/lib/toastrInstance";
 import '@sass/app.scss'
 import RoutesConfig from "@/routes/RoutesConfig";
+import '@/lib/i18n'
 
 
 crudAxiosInstance.interceptors.response.use(response, error);

@@ -1,9 +1,11 @@
 import React from 'react';
 import { ColumnDefinition, Crud, FieldTypes, MultiSelectOptionsColumns, useGetQueryClient } from '@sefirosweb/react-crud'
 import { APP_URL } from '@/types/configurationType';
+import { useTranslation } from 'react-i18next';
 
 export const AccessList = () => {
     const queryClient = useGetQueryClient();
+    const { t } = useTranslation()
 
     const multiSelectRole: MultiSelectOptionsColumns<any> = {
         primaryKey: 'id',
@@ -16,11 +18,11 @@ export const AccessList = () => {
                 accessorKey: 'id'
             },
             {
-                header: 'Name',
+                header: t('Name'),
                 accessorKey: 'name'
             },
             {
-                header: 'Descripcion',
+                header: t('Description'),
                 accessorKey: 'description'
             },
         ],
@@ -35,22 +37,22 @@ export const AccessList = () => {
         },
         {
             accessorKey: 'name',
-            header: 'Name',
-            titleOnCRUD: 'ACL Name',
+            header: t('Name'),
+            titleOnCRUD: t('Name'),
             editable: true,
             enableSorting: true,
         },
         {
             accessorKey: 'description',
-            titleOnCRUD: 'Description',
-            header: 'Description',
+            titleOnCRUD: t('Description'),
+            header: t('Description'),
             editable: true,
             enableSorting: true,
         },
         {
             id: 'roles',
-            titleOnCRUD: 'Roles',
-            header: 'Roles',
+            titleOnCRUD: t('Roles'),
+            header: t('Roles'),
             editable: true,
             fieldType: FieldTypes.MULTISELECT,
             multiSelectOptions: multiSelectRole
@@ -59,13 +61,13 @@ export const AccessList = () => {
 
     return (
         <>
-            <h1>Access List</h1>
+            <h1>{t('AccessList')}</h1>
             <Crud
                 canDelete
                 canEdit
                 canRefresh
                 enableGlobalFilter
-                createButtonTitle="Create Access List"
+                createButtonTitle={t('create_acl')}
                 crudUrl={`${APP_URL}/access_list`}
                 primaryKey="id"
                 titleOnDelete="name"

@@ -53,18 +53,14 @@ export const error = (error: any) => {
             toastr.error(error.response.data, `Method not allowed`);
             break;
         case 422:
-            const error_422 = `
-              ${error.response.data.message}<br>
-              ${Object.keys(error.response.data.errors).map(
-                (name) => {
-                    return error.response.data.errors[name].join(
-                        "<br>"
-                    );
-                }
-            )}`;
-            toastr.warning(error_422, `Unprocessable Entity`);
+            const errors = [];
+            Object.entries<Array<string>>(error.response.data.errors).forEach((fieldError) => {
+                const [, errorsInField] = fieldError
+                errorsInField.forEach((e) => errors.push(e))
+            })
+            const error_422 = errors.map(e => `<div>-${e}</div>`).join('')
+            toastr.warning(error_422, error.response.data.message);
             break;
-
         default:
             if (axios.isCancel(error)) {
                 console.log("Request canceled", error.message);

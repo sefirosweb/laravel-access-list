@@ -40,7 +40,7 @@ export const Users = () => {
                 canRefresh
                 enableGlobalFilter
                 customButtons={customFilters}
-                createButtonTitle="Create User"
+                createButtonTitle={t('create_user')}
                 crudUrl={`${APP_URL}/users`}
                 primaryKey={primaryId}
                 titleOnDelete="email"

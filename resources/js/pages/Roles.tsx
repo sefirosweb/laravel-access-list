@@ -1,9 +1,11 @@
 import React from 'react';
 import { APP_URL } from '@/types/configurationType';
 import { ColumnDefinition, Crud, FieldTypes, MultiSelectOptionsColumns, useGetQueryClient } from '@sefirosweb/react-crud'
+import { useTranslation } from 'react-i18next';
 
 export const Roles = () => {
     const queryClient = useGetQueryClient();
+    const { t } = useTranslation()
 
     const multiSelectUser: MultiSelectOptionsColumns<User> = {
         primaryKey: 'id',
@@ -16,7 +18,7 @@ export const Roles = () => {
                 accessorKey: 'id'
             },
             {
-                header: 'Name',
+                header: t('Name'),
                 accessorKey: 'name'
             },
             {
@@ -37,11 +39,11 @@ export const Roles = () => {
                 accessorKey: 'id'
             },
             {
-                header: 'Name',
+                header: t('Name'),
                 accessorKey: 'name'
             },
             {
-                header: 'Description',
+                header: t('Description'),
                 accessorKey: 'description'
             },
         ],
@@ -57,30 +59,30 @@ export const Roles = () => {
         },
         {
             accessorKey: 'name',
-            header: 'Name',
+            header: t('Name'),
             titleOnCRUD: 'Role Name',
             editable: true,
             enableSorting: true,
         },
         {
             accessorKey: 'description',
-            titleOnCRUD: 'Description',
-            header: 'Description',
+            titleOnCRUD: t('Description'),
+            header: t('Description'),
             editable: true,
             enableSorting: true,
         },
         {
             id: 'users',
-            titleOnCRUD: 'Users',
-            header: 'Users',
+            titleOnCRUD: t('Users'),
+            header: t('Users'),
             editable: true,
             fieldType: FieldTypes.MULTISELECT,
             multiSelectOptions: multiSelectUser
         },
         {
             id: 'access_lists',
-            titleOnCRUD: 'Access Lists',
-            header: 'Access Lists',
+            titleOnCRUD: t('AccessList'),
+            header: t('AccessList'),
             editable: true,
             fieldType: FieldTypes.MULTISELECT,
             multiSelectOptions: multiSelectAccessList
@@ -89,13 +91,13 @@ export const Roles = () => {
 
     return (
         <>
-            <h1>Roles</h1>
+            <h1>{t('Roles')}</h1>
             <Crud
                 canDelete
                 canEdit
                 canRefresh
                 enableGlobalFilter
-                createButtonTitle="Create Role"
+                createButtonTitle={t('create_role')}
                 crudUrl={`${APP_URL}/roles`}
                 primaryKey="id"
                 titleOnDelete="name"

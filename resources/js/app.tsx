@@ -4,9 +4,9 @@ import axios from "axios";
 import ReactDOM from 'react-dom/client'
 import { axiosInstance as crudAxiosInstance } from '@sefirosweb/react-crud'
 import { error, response } from "@/lib/axios.interceptors";
+import RoutesConfig from "@/routes/RoutesConfig";
 import "@/lib/toastrInstance";
 import '@sass/app.scss'
-import RoutesConfig from "@/routes/RoutesConfig";
 import '@/lib/i18n'
 
 

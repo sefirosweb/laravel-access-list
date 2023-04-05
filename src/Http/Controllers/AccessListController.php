@@ -41,7 +41,7 @@ class AccessListController extends Controller
      */
     public function update(AccessListRequest $request, AccessList $accessList)
     {
-        $accessList = AccessList::findOrFail($request->id);
+        $accessList = AccessList::findOrFail($request->acl_id);
         $accessList->update($request->all());
         return response()->json(['success' => true]);
     }
@@ -54,37 +54,34 @@ class AccessListController extends Controller
      */
     public function destroy(Request $request)
     {
-        $accessList = AccessList::findOrFail($request->id);
+        $accessList = AccessList::findOrFail($request->acl_id);
         $accessList->delete();
         return response()->json(['success' => true]);
     }
 
     public function get_roles_from_access_list(Request $request)
     {
-        $accessList = AccessList::findOrFail($request->access_list_id);
+        $accessList = AccessList::findOrFail($request->acl_id);
         return response()->json(['success' => true, 'data' => $accessList->roles]);
     }
 
     public function add_role_to_access_list(Request $request)
     {
-        $accessList = AccessList::findOrFail($request->access_list_id);
-        $accessList->roles()->syncWithoutDetaching($request->id);
+        $accessList = AccessList::findOrFail($request->acl_id);
+        $accessList->roles()->syncWithoutDetaching($request->role_id);
         return response()->json(['success' => true]);
     }
 
     public function delete_role_of_the_access_list(Request $request)
     {
-        $accessList = AccessList::findOrFail($request->access_list_id);
-        $accessList->roles()->detach($request->id);
+        $accessList = AccessList::findOrFail($request->acl_id);
+        $accessList->roles()->detach($request->role_id);
         return response()->json(['success' => true]);
     }
 
     public function get_roles_array()
     {
-        $role = Role::get()->map(function ($row) {
-            $row['value'] = $row->id;
-            return $row;
-        });
+        $role = Role::select(['id', 'id as value', 'name'])->get();
         return response()->json(['data' => $role]);
     }
 }

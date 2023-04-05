@@ -80,9 +80,9 @@ class UserController extends Controller
         }
 
         if ($this->enabledSoftDelete()) {
-            $user = User::withTrashed()->findOrFail($request->id);
+            $user = User::withTrashed()->findOrFail($request->user_id);
         } else {
-            $user = User::findOrFail($request->id);
+            $user = User::findOrFail($request->user_id);
         }
 
         $user->changeRules($rules);
@@ -99,14 +99,15 @@ class UserController extends Controller
     public function destroy(Request $request)
     {
         if ($this->enabledSoftDelete()) {
-            $user = User::withTrashed()->findOrFail($request->id);
+            $user = User::withTrashed()->findOrFail($request->user_id);
             if (!$user->deleted_at) {
                 $user->delete();
             } else {
+                $user->changeRules([]);
                 $user->restore();
             }
         } else {
-            $user = User::findOrFail($request->id);
+            $user = User::findOrFail($request->user_id);
             $user->delete();
         }
 
@@ -132,7 +133,7 @@ class UserController extends Controller
             $user = User::findOrFail($request->user_id);
         }
 
-        $user->roles()->syncWithoutDetaching($request->id);
+        $user->roles()->syncWithoutDetaching($request->role_id);
         return response()->json(['success' => true]);
     }
 
@@ -143,7 +144,7 @@ class UserController extends Controller
         } else {
             $user = User::findOrFail($request->user_id);
         }
-        $user->roles()->detach($request->id);
+        $user->roles()->detach($request->role_id);
         return response()->json(['success' => true]);
     }
 

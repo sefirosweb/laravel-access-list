@@ -9,7 +9,7 @@ export const Roles = () => {
 
     const multiSelectUser: MultiSelectOptionsColumns<User> = {
         primaryKey: 'id',
-        sentKeyAs: "role_id",
+        sentKeyAs: "user_id",
         url: `${APP_URL}/role/users`,
         getDataUrl: `${APP_URL}/role/users/get_array`,
         columns: [
@@ -30,7 +30,7 @@ export const Roles = () => {
 
     const multiSelectAccessList: MultiSelectOptionsColumns<AccessList> = {
         primaryKey: 'id',
-        sentKeyAs: 'role_id',
+        sentKeyAs: 'acl_id',
         url: `${APP_URL}/role/access_lists`,
         getDataUrl: `${APP_URL}/role/access_lists/get_array`,
         columns: [
@@ -100,6 +100,7 @@ export const Roles = () => {
                 createButtonTitle={t('create_role')}
                 crudUrl={`${APP_URL}/roles`}
                 primaryKey="id"
+                sentKeyAs="role_id"
                 titleOnDelete="name"
                 columns={columns}
                 handleSuccess={() => {

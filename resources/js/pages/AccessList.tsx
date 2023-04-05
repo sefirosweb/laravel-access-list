@@ -9,7 +9,7 @@ export const AccessList = () => {
 
     const multiSelectRole: MultiSelectOptionsColumns<any> = {
         primaryKey: 'id',
-        sentKeyAs: 'access_list_id',
+        sentKeyAs: 'role_id',
         url: `${APP_URL}/access_list/roles`,
         getDataUrl: `${APP_URL}/access_list/roles/get_array`,
         columns: [
@@ -70,6 +70,7 @@ export const AccessList = () => {
                 createButtonTitle={t('create_acl')}
                 crudUrl={`${APP_URL}/access_list`}
                 primaryKey="id"
+                sentKeyAs='acl_id'
                 titleOnDelete="name"
                 columns={columns}
                 handleSuccess={() => {

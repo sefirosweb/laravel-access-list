@@ -42,6 +42,7 @@ export const Users = () => {
                 customButtons={customFilters}
                 createButtonTitle={t('create_user')}
                 crudUrl={`${APP_URL}/users`}
+                sentKeyAs='user_id'
                 primaryKey={primaryId}
                 titleOnDelete="email"
                 columns={tableColumns}

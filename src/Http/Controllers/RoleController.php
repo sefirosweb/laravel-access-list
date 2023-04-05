@@ -42,7 +42,7 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, Role $role)
     {
-        $role = Role::findOrFail($request->id);
+        $role = Role::findOrFail($request->role_id);
         $role->update($request->all());
         return response()->json(['success' => true]);
     }
@@ -55,7 +55,7 @@ class RoleController extends Controller
      */
     public function destroy(Request $request)
     {
-        $role = Role::findOrFail($request->id);
+        $role = Role::findOrFail($request->role_id);
         $role->delete();
         return response()->json(['success' => true]);
     }
@@ -69,14 +69,14 @@ class RoleController extends Controller
     public function add_user_to_role(Request $request)
     {
         $role = Role::findOrFail($request->role_id);
-        $role->users()->syncWithoutDetaching($request->id);
+        $role->users()->syncWithoutDetaching($request->user_id);
         return response()->json(['success' => true]);
     }
 
     public function delete_user_of_the_role(Request $request)
     {
         $role = Role::findOrFail($request->role_id);
-        $role->users()->detach($request->id);
+        $role->users()->detach($request->user_id);
         return response()->json(['success' => true]);
     }
 
@@ -89,33 +89,26 @@ class RoleController extends Controller
     public function add_access_list_to_role(Request $request)
     {
         $role = Role::findOrFail($request->role_id);
-        $role->access_lists()->syncWithoutDetaching($request->id);
+        $role->access_lists()->syncWithoutDetaching($request->acl_id);
         return response()->json(['success' => true]);
     }
 
     public function delete_access_list_of_the_role(Request $request)
     {
         $role = Role::findOrFail($request->role_id);
-        $role->access_lists()->detach($request->id);
+        $role->access_lists()->detach($request->acl_id);
         return response()->json(['success' => true]);
     }
 
     public function get_users_array()
     {
-        $users = User::get()->map(function ($row) {
-            $row['value'] = $row->id;
-            $row['name'] = $row->email;
-            return $row;
-        });
+        $users = User::select(['id', 'id as value', 'email as name'])->get();
         return response()->json(['data' => $users]);
     }
 
     public function get_acl_array()
     {
-        $accessList = AccessList::get()->map(function ($row) {
-            $row['value'] = $row->id;
-            return $row;
-        });
+        $accessList = AccessList::select(['id', 'id as value', 'name'])->get();
         return response()->json(['data' => $accessList]);
     }
 }

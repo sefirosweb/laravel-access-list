@@ -15,7 +15,7 @@ class LaravelAccessListServiceProvider extends ServiceProvider
         $this->registerRoutes();
 
         $this->publishes([
-            __DIR__ . '/../public' => public_path('vendor/laravel-access-list'),
+            __DIR__ . '/../public/bundle' => public_path('vendor/laravel-access-list'),
         ], ['acl-assets', 'laravel-assets']);
 
         $this->publishes([

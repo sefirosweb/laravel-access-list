@@ -17,8 +17,7 @@
     </script>
 
     {{ Vite::useHotFile(storage_path('app/vite_acl.hot'))
-    // ->useBuildDirectory('bundle')
-    // ->useManifestFilename('assets.json')
+    ->useBuildDirectory('vendor/laravel-access-list')
     ->withEntryPoints(['resources/js/app.tsx']) }}
 </body>
 

@@ -12,4 +12,7 @@ export default {
     create_acl: 'Create Access List',
     GoMain: 'Go Home',
     AccessList: 'Access List',
+    error: {
+        page_not_found: 'Page not found 404',
+    },
 }

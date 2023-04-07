@@ -11,5 +11,8 @@ export default {
     create_role: 'Crear Grupo',
     create_acl: 'Crear Acceso',
     GoMain: 'Volver',
-    AccessList: 'Accessos'
+    AccessList: 'Accessos',
+    error: {
+        page_not_found: 'Página no encontrada',
+    },
 }

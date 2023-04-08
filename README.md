@@ -41,7 +41,7 @@ Install database migrations
 php artisan migrate
 ```
 
-Publish React front:
+Publish frontend:
 
 ```
 php artisan vendor:publish --provider="Sefirosweb\LaravelAccessList\LaravelAccessListServiceProvider"  --tag=acl-assets --force

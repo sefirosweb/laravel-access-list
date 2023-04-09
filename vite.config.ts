@@ -4,6 +4,7 @@ import laravel from 'laravel-vite-plugin';
 import path from 'path'
 
 export default defineConfig({
+    base: '/vendor/laravel-access-list/',
     server: {
         hmr: {
             host: 'localhost'

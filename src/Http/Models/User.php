@@ -22,6 +22,6 @@ class User extends Authenticatable
     public function roles(): BelongsToMany
     {
         $Role = config('laravel-access-list.Role');
-        return $this->belongsToMany($Role::class, 'user_has_role');
+        return $this->belongsToMany($Role, 'user_has_role');
     }
 }

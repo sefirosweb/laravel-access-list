@@ -15,12 +15,12 @@ class Role extends Model
     public function users(): BelongsToMany
     {
         $User = config('laravel-access-list.User');
-        return $this->belongsToMany($User::class, 'user_has_role');
+        return $this->belongsToMany($User, 'user_has_role');
     }
 
     public function access_lists(): BelongsToMany
     {
         $AccessList = config('laravel-access-list.AccessList');
-        return $this->belongsToMany($AccessList::class, 'role_has_acl');
+        return $this->belongsToMany($AccessList, 'role_has_acl');
     }
 }

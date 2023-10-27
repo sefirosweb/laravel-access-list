@@ -4,12 +4,9 @@ namespace Sefirosweb\LaravelAccessList\Http\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Sefirosweb\LaravelAccessList\Http\Traits\UsesCustomModel;
 
 class Role extends Model
 {
-    use UsesCustomModel;
-
     protected $fillable = [
         'name',
         'description'
@@ -17,11 +14,13 @@ class Role extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_has_role');
+        $User = config('laravel-access-list.User');
+        return $this->belongsToMany($User::class, 'user_has_role');
     }
 
     public function access_lists(): BelongsToMany
     {
-        return $this->belongsToMany(AccessList::class, 'role_has_acl');
+        $AccessList = config('laravel-access-list.AccessList');
+        return $this->belongsToMany($AccessList::class, 'role_has_acl');
     }
 }

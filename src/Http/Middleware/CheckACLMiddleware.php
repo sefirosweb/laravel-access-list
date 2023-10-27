@@ -17,6 +17,8 @@ class CheckACLMiddleware
      */
     public function handle(Request $request, Closure $next, $acl)
     {
+        $User = config('laravel-access-list.User');
+
         if (!request()->user()) {
             if ($request->ajax()) {
                 return response()
@@ -28,7 +30,7 @@ class CheckACLMiddleware
 
         $acl = str_replace(':class:', '', $acl);
 
-        $user = User::find($request->user()->id);
+        $user = $User::find($request->user()->id);
 
         if (!$user->hasAcl($acl)) {
             if ($request->ajax()) {

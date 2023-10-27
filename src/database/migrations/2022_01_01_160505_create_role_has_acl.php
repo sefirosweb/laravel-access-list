@@ -22,10 +22,12 @@ class CreateRoleHasAcl extends Migration
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
             $table->foreign('access_list_id')->references('id')->on('access_lists')->onDelete('cascade');
         });
+        $Role = config('laravel-access-list.Role');
+        $AccessList = config('laravel-access-list.AccessList');
 
-        Role::where('name', 'admin')->get()->first()->access_lists()->attach(AccessList::where('name', 'admin')->get()->first());
-        Role::where('name', 'acl')->get()->first()->access_lists()->attach(AccessList::where('name', 'acl_view')->get()->first());
-        Role::where('name', 'acl')->get()->first()->access_lists()->attach(AccessList::where('name', 'acl_edit')->get()->first());
+        $Role::where('name', 'admin')->get()->first()->access_lists()->attach($AccessList::where('name', 'admin')->get()->first());
+        $Role::where('name', 'acl')->get()->first()->access_lists()->attach($AccessList::where('name', 'acl_view')->get()->first());
+        $Role::where('name', 'acl')->get()->first()->access_lists()->attach($AccessList::where('name', 'acl_edit')->get()->first());
     }
 
     /**

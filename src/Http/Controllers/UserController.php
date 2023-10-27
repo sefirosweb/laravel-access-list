@@ -8,8 +8,6 @@ use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Sefirosweb\LaravelAccessList\Http\Models\Role;
-use Sefirosweb\LaravelAccessList\Http\Models\User;
 
 class UserController extends Controller
 {
@@ -20,7 +18,8 @@ class UserController extends Controller
      */
     public function get(Request $request)
     {
-        $query = User::query();
+        $User = config('laravel-access-list.User');
+        $query = $User::query();
 
         if ($this->enabledSoftDelete()) {
             if ($request->status === 'all') {
@@ -43,16 +42,18 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        Validator::make($request->all(), User::getRules())->validate();
+        $User = config('laravel-access-list.User');
+
+        Validator::make($request->all(), $User::getRules())->validate();
 
         $request->merge([
             'password' => $request->password ? Hash::make($request->password) : Hash::make('guest')
         ]);
 
-        $rules = User::getRules();
+        $rules = $User::getRules();
         unset($rules['password']);
 
-        $user = new User($request->all());
+        $user = new $User($request->all());
         $user->changeRules($rules);
         $user->save();
         return response()->json(['success' => true]);
@@ -66,7 +67,8 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $rules = User::getRules($request);
+        $User = config('laravel-access-list.User');
+        $rules = $User::getRules($request);
 
         $update = $request->all();
         if (isset($update['password']) && $update['password']) {
@@ -80,9 +82,9 @@ class UserController extends Controller
         }
 
         if ($this->enabledSoftDelete()) {
-            $user = User::withTrashed()->findOrFail($request->user_id);
+            $user = $User::withTrashed()->findOrFail($request->user_id);
         } else {
-            $user = User::findOrFail($request->user_id);
+            $user = $User::findOrFail($request->user_id);
         }
 
         $user->changeRules($rules);
@@ -98,8 +100,9 @@ class UserController extends Controller
      */
     public function destroy(Request $request)
     {
+        $User = config('laravel-access-list.User');
         if ($this->enabledSoftDelete()) {
-            $user = User::withTrashed()->findOrFail($request->user_id);
+            $user = $User::withTrashed()->findOrFail($request->user_id);
             if (!$user->deleted_at) {
                 $user->delete();
             } else {
@@ -107,7 +110,7 @@ class UserController extends Controller
                 $user->restore();
             }
         } else {
-            $user = User::findOrFail($request->user_id);
+            $user = $User::findOrFail($request->user_id);
             $user->delete();
         }
 
@@ -116,10 +119,11 @@ class UserController extends Controller
 
     public function get_roles_from_user(Request $request)
     {
+        $User = config('laravel-access-list.User');
         if ($this->enabledSoftDelete()) {
-            $user = User::withTrashed()->with('roles:id,name,description')->findOrFail($request->user_id);
+            $user = $User::withTrashed()->with('roles:id,name,description')->findOrFail($request->user_id);
         } else {
-            $user = User::with('roles:id,name,description')->findOrFail($request->user_id);
+            $user = $User::with('roles:id,name,description')->findOrFail($request->user_id);
         }
 
         return response()->json(['success' => true, 'data' => $user->roles]);
@@ -127,10 +131,11 @@ class UserController extends Controller
 
     public function add_role_to_user(Request $request)
     {
+        $User = config('laravel-access-list.User');
         if ($this->enabledSoftDelete()) {
-            $user = User::withTrashed()->findOrFail($request->user_id);
+            $user = $User::withTrashed()->findOrFail($request->user_id);
         } else {
-            $user = User::findOrFail($request->user_id);
+            $user = $User::findOrFail($request->user_id);
         }
 
         $user->roles()->syncWithoutDetaching($request->role_id);
@@ -139,10 +144,11 @@ class UserController extends Controller
 
     public function delete_role_of_the_user(Request $request)
     {
+        $User = config('laravel-access-list.User');
         if ($this->enabledSoftDelete()) {
-            $user = User::withTrashed()->findOrFail($request->user_id);
+            $user = $User::withTrashed()->findOrFail($request->user_id);
         } else {
-            $user = User::findOrFail($request->user_id);
+            $user = $User::findOrFail($request->user_id);
         }
         $user->roles()->detach($request->role_id);
         return response()->json(['success' => true]);
@@ -150,7 +156,8 @@ class UserController extends Controller
 
     public function get_roles_array()
     {
-        $users = Role::get()->map(function ($row) {
+        $Role = config('laravel-access-list.Role');
+        $users = $Role::query()->get()->map(function ($row) {
             $row['value'] = $row->id;
             return $row;
         });

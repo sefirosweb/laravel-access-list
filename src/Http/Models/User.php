@@ -2,16 +2,15 @@
 
 namespace Sefirosweb\LaravelAccessList\Http\Models;
 
-use App\Models\User as ModelsUser;
 use DateTime;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Sefirosweb\LaravelAccessList\Http\Traits\HasAcl;
 use Sefirosweb\LaravelAccessList\Http\Traits\SelfModelValidator;
-use Sefirosweb\LaravelAccessList\Http\Traits\UsesCustomModel;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends ModelsUser
+class User extends Authenticatable
 {
-    use SelfModelValidator, HasAcl, UsesCustomModel;
+    use SelfModelValidator, HasAcl;
 
     public function getDeletedAtAttribute($date)
     {
@@ -22,6 +21,7 @@ class User extends ModelsUser
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'user_has_role');
+        $Role = config('laravel-access-list.Role');
+        return $this->belongsToMany($Role::class, 'user_has_role');
     }
 }

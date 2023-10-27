@@ -22,7 +22,8 @@ class CreateAccessListsTable extends Migration
             $table->timestamps();
         });
 
-        AccessList::insert([
+        $AccessList = config('laravel-access-list.AccessList');
+        $AccessList::insert([
             [
                 'name' => 'admin',
                 'description' => 'Super administrator, can access to all',

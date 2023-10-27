@@ -22,7 +22,8 @@ class CreateRolesTable extends Migration
             $table->timestamps();
         });
 
-        Role::insert([
+        $Role = config('laravel-access-list.Role');
+        $Role::insert([
             [
                 'name' => 'admin',
                 'description' => 'Group of administrators',

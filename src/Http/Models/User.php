@@ -7,10 +7,11 @@ use DateTime;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Sefirosweb\LaravelAccessList\Http\Traits\HasAcl;
 use Sefirosweb\LaravelAccessList\Http\Traits\SelfModelValidator;
+use Sefirosweb\LaravelAccessList\Http\Traits\UsesCustomModel;
 
 class User extends ModelsUser
 {
-    use SelfModelValidator, HasAcl;
+    use SelfModelValidator, HasAcl, UsesCustomModel;
 
     public function getDeletedAtAttribute($date)
     {

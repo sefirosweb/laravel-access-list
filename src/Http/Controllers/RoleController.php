@@ -19,7 +19,7 @@ class RoleController extends Controller
     public function get()
     {
         $Role = config('laravel-access-list.Role');
-        return response()->json(['success' => true, 'data' => $Role::query()->all()]);
+        return response()->json(['success' => true, 'data' => $Role::query()->get()]);
     }
 
     /**

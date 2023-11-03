@@ -17,7 +17,7 @@ class AccessListController extends Controller
     public function get()
     {
         $AccessList = config('laravel-access-list.AccessList');
-        return response()->json(['success' => true, 'data' => $AccessList::query()->all()]);
+        return response()->json(['success' => true, 'data' => $AccessList::query()->get()]);
     }
 
     /**

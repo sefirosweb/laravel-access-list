@@ -14,7 +14,7 @@ class AccessList extends Model
 
     public function roles(): BelongsToMany
     {
-        $Role = config('laravel-access-list.User');
+        $Role = config('laravel-access-list.Role');
         return $this->belongsToMany($Role, 'role_has_acl');
     }
 }

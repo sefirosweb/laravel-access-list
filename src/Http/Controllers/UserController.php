@@ -68,7 +68,11 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $User = config('laravel-access-list.User');
-        $rules = $User::getRules($request);
+        if (method_exists($User, 'getRules')) {
+            $rules = $User::getRules($request);
+        } else {
+            $rules = [];
+        }
 
         $update = $request->all();
         if (isset($update['password']) && $update['password']) {
@@ -87,7 +91,10 @@ class UserController extends Controller
             $user = $User::findOrFail($request->user_id);
         }
 
-        $user->changeRules($rules);
+        if (method_exists($user, 'changeRules')) {
+            $user->changeRules($rules);
+        }
+
         $user->update($update);
         return response()->json(['success' => true]);
     }

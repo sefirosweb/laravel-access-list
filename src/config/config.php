@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
     'prefix' => 'acl',
     'middleware' => ['web', 'auth', 'checkAcl:acl_edit'],

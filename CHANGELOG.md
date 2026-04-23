@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [12.0.2] - 2026-04-23
+
+### Changed
+- Enabled `declare(strict_types=1);` on every PHP file under `src/`. The whole package now runs under strict type coercion rules. Test suite (17 tests, 40 assertions) passes unchanged, so no runtime coercion was hiding bugs.
+
 ## [12.0.1] - 2026-04-23
 
 ### Changed

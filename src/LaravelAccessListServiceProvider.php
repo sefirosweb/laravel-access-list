@@ -4,6 +4,7 @@ namespace Sefirosweb\LaravelAccessList;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Sefirosweb\LaravelAccessList\Http\Middleware\CheckACLMiddleware;
 
 class LaravelAccessListServiceProvider extends ServiceProvider
 {
@@ -22,7 +23,7 @@ class LaravelAccessListServiceProvider extends ServiceProvider
             __DIR__ . '/config/config.php' => config_path('laravel-access-list.php'),
         ], 'config');
 
-        $this->app['router']->aliasMiddleware('checkAcl', 'Sefirosweb\LaravelAccessList\Http\Middleware\CheckACLMiddleware::class');
+        $this->app['router']->aliasMiddleware('checkAcl', CheckACLMiddleware::class);
     }
 
     protected function registerRoutes()

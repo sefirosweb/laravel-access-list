@@ -4,16 +4,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Sefirosweb\LaravelAccessList\Http\Models\AccessList;
 
-class CreateAccessListsTable extends Migration
+return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('access_lists', function (Blueprint $table) {
             $table->id();
@@ -28,30 +22,25 @@ class CreateAccessListsTable extends Migration
                 'name' => 'admin',
                 'description' => 'Super administrator, can access to all',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'acl_edit',
                 'description' => 'Manage who can edit the access list and users',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'acl_view',
-                'description' => 'This acl only os for see who have permissions, can`t edit anything',
+                'description' => 'This acl only is for see who have permissions, can`t edit anything',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
             ],
         ]);
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('access_lists');
     }
-}
+};

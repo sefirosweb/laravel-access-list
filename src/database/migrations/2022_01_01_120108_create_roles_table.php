@@ -4,16 +4,10 @@ use Carbon\Carbon;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Sefirosweb\LaravelAccessList\Http\Models\Role;
 
-class CreateRolesTable extends Migration
+return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
@@ -28,24 +22,19 @@ class CreateRolesTable extends Migration
                 'name' => 'admin',
                 'description' => 'Group of administrators',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
+                'updated_at' => Carbon::now(),
             ],
             [
                 'name' => 'acl',
                 'description' => 'Group for manage the roles and users',
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ]
+                'updated_at' => Carbon::now(),
+            ],
         ]);
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('roles');
     }
-}
+};

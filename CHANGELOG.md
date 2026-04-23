@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [12.0.3] - 2026-04-23
+
+### Changed
+- Added native return types to `SelfModelValidator::bootSelfModelValidator(): void`, `changeRules(array $rules): void` and `getRules(?Request $request = null): array`.
+
 ## [12.0.2] - 2026-04-23
 
 ### Changed

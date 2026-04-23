@@ -18,7 +18,7 @@ trait SelfModelValidator
         $this->changeRules($rules);
     }
 
-    public static function bootSelfModelValidator()
+    public static function bootSelfModelValidator(): void
     {
         static::retrieved(function ($model) {
             $rules = method_exists($model, 'getValidationRules') ? $model->getValidationRules(new Request($model->toArray())) : [];
@@ -34,12 +34,12 @@ trait SelfModelValidator
         });
     }
 
-    public function changeRules($rules)
+    public function changeRules(array $rules): void
     {
         $this->rules = $rules;
     }
 
-    public static function getRules(Request $request = null)
+    public static function getRules(?Request $request = null): array
     {
         $model = new self($request === null ? [] : $request->all());
         return isset($model->rules) ? $model->rules : [];

@@ -35,6 +35,8 @@ abstract class TestCase extends OrchestraTestCase
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('password')->nullable();
+            $table->rememberToken();
             $table->timestamps();
         });
     }

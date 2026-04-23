@@ -4,43 +4,39 @@ namespace Sefirosweb\LaravelAccessList\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Sefirosweb\LaravelAccessList\Http\Models\User;
 
 class CheckACLMiddleware
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
-    public function handle(Request $request, Closure $next, $acl)
+    public function handle(Request $request, Closure $next, string $acl)
     {
-        $User = config('laravel-access-list.User');
+        $userClass = config('laravel-access-list.User');
 
-        if (!request()->user()) {
-            if ($request->ajax()) {
-                return response()
-                    ->json(['message'   => "You don't have permissions for this site"])
-                    ->setStatusCode(401);
-            }
-            return redirect('/');
+        $authUser = $request->user();
+
+        if (!$authUser) {
+            return $this->deny($request);
         }
 
         $acl = str_replace(':class:', '', $acl);
 
-        $user = $User::find($request->user()->id);
+        /** @var object|null $user */
+        $user = $userClass::find($authUser->id);
 
-        if (!$user->hasAcl($acl)) {
-            if ($request->ajax()) {
-                return response()
-                    ->json(['message'   => "You don't have permissions for this site"])
-                    ->setStatusCode(401);
-            }
-            return redirect('/');
+        if (!$user || !$user->hasAcl($acl)) {
+            return $this->deny($request);
         }
 
         return $next($request);
+    }
+
+    private function deny(Request $request)
+    {
+        if ($request->ajax() || $request->expectsJson()) {
+            return response()
+                ->json(['message' => "You don't have permissions for this site"])
+                ->setStatusCode(401);
+        }
+
+        return redirect('/');
     }
 }

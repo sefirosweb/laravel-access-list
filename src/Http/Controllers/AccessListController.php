@@ -19,7 +19,12 @@ class AccessListController extends Controller
     public function get()
     {
         $AccessList = config('laravel-access-list.AccessList');
-        return response()->json(['success' => true, 'data' => $AccessList::query()->get()]);
+        // Eager-load roles to avoid N+1 in the bundled UI: the listing
+        // shows the role badges directly on each row.
+        $data = $AccessList::query()
+            ->with('roles:id,name')
+            ->get();
+        return response()->json(['success' => true, 'data' => $data]);
     }
 
     /**
@@ -45,7 +50,7 @@ class AccessListController extends Controller
     public function update(AccessListRequest $request, AccessList $accessList)
     {
         $AccessList = config('laravel-access-list.AccessList');
-        $accessList = $AccessList::findOrFail($request->acl_id);
+        $accessList = $AccessList::findOrFail($request->access_list_id);
         $accessList->update($request->all());
         return response()->json(['success' => true]);
     }
@@ -59,7 +64,7 @@ class AccessListController extends Controller
     public function destroy(Request $request)
     {
         $AccessList = config('laravel-access-list.AccessList');
-        $accessList = $AccessList::findOrFail($request->acl_id);
+        $accessList = $AccessList::findOrFail($request->access_list_id);
         $accessList->delete();
         return response()->json(['success' => true]);
     }
@@ -67,14 +72,14 @@ class AccessListController extends Controller
     public function get_roles_from_access_list(Request $request)
     {
         $AccessList = config('laravel-access-list.AccessList');
-        $accessList = $AccessList::findOrFail($request->acl_id);
+        $accessList = $AccessList::findOrFail($request->access_list_id);
         return response()->json(['success' => true, 'data' => $accessList->roles]);
     }
 
     public function add_role_to_access_list(Request $request)
     {
         $AccessList = config('laravel-access-list.AccessList');
-        $accessList = $AccessList::findOrFail($request->acl_id);
+        $accessList = $AccessList::findOrFail($request->access_list_id);
         $accessList->roles()->syncWithoutDetaching($request->role_id);
         return response()->json(['success' => true]);
     }
@@ -82,7 +87,7 @@ class AccessListController extends Controller
     public function delete_role_of_the_access_list(Request $request)
     {
         $AccessList = config('laravel-access-list.AccessList');
-        $accessList = $AccessList::findOrFail($request->acl_id);
+        $accessList = $AccessList::findOrFail($request->access_list_id);
         $accessList->roles()->detach($request->role_id);
         return response()->json(['success' => true]);
     }

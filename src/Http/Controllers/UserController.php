@@ -20,7 +20,9 @@ class UserController extends Controller
     public function get(Request $request)
     {
         $User = config('laravel-access-list.User');
-        $query = $User::query();
+        // Eager-load roles to avoid N+1 when the bundled UI renders one row
+        // per user with its group badges in the listing table.
+        $query = $User::query()->with('roles:id,name,description');
 
         if ($this->enabledSoftDelete()) {
             if ($request->status === 'all') {

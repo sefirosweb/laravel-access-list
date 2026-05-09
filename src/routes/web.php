@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 use Sefirosweb\LaravelAccessList\Http\Controllers\AccessListController;
+use Sefirosweb\LaravelAccessList\Http\Controllers\MeController;
 use Sefirosweb\LaravelAccessList\Http\Controllers\RoleController;
 use Sefirosweb\LaravelAccessList\Http\Controllers\UserController;
 
@@ -38,7 +39,7 @@ Route::post('role/users', [RoleController::class, 'add_user_to_role']);
 Route::delete('role/users', [RoleController::class, 'delete_user_of_the_role']);
 // Manage the access lists
 Route::get('role/access_lists', [RoleController::class, 'get_access_list_from_role']);
-Route::get('role/access_lists/get_array', [RoleController::class, 'get_acl_array']);
+Route::get('role/access_lists/get_array', [RoleController::class, 'get_access_lists_array']);
 Route::post('role/access_lists', [RoleController::class, 'add_access_list_to_role']);
 Route::delete('role/access_lists', [RoleController::class, 'delete_access_list_of_the_role']);
 
@@ -47,6 +48,8 @@ Route::get('roles', [RoleController::class, 'get']);
 Route::get('access_list', [AccessListController::class, 'get']);
 
 Route::get('get_user_fillable_data', [UserController::class, 'get_fillable_data']);
+
+Route::get('me', [MeController::class, 'show']);
 
 Route::get('/', function () {
     return view('acl::index');

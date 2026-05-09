@@ -25,16 +25,19 @@ class AccessListRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->input('access_list_id') ?? $this->input('id');
+        $AccessList = config('laravel-access-list.AccessList');
+
         return [
             'name' => [
                 'required',
                 'min:3',
                 'max:255',
-                'unique:Sefirosweb\LaravelAccessList\Http\Models\AccessList,name,' . $this->id
+                'unique:' . $AccessList . ',name,' . ($id ?: 'NULL'),
             ],
             'description' => [
-                'required',
-                'min:3',
+                'nullable',
+                'string',
                 'max:255',
             ],
         ];

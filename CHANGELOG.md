@@ -9,18 +9,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [13.0.1] - 2026-05-09
 
+This release pairs a long list of backend hardening fixes with a complete rewrite of the bundled admin UI. The package surface is unchanged, so upgrading is just a `composer update` + republish of `acl-assets`. Hosts that copy or extend `Sefirosweb\…\Http\Models\User` should re-read the *Customizing the User model* section of the README — the package model now ships `getRules()`, `changeRules()`, `$fillable` and `$hidden` directly.
+
+### Added
+- **New admin UI** at `/acl`. Rewritten on React 19 + TypeScript 5.7 + Vite 6 + TanStack Query 5 + i18next. The dependency on `react-bootstrap` and `@sefirosweb/react-crud` is gone, the bundle is fully self-contained, and the design is mobile-responsive.
+  - Self-hosted Geist + Geist Mono fonts (no CDN, no external network calls).
+  - i18n with browser language detection + persisted user choice (ES / EN), with a manual switcher in the top nav.
+  - Optimistic toggles with rollback for user↔group, group↔user, group↔access and access↔group attachments — the UI no longer flickers between "mutation done" and "refetch done".
+  - Sort toggle in every relations drawer (Name / Assigned), so on a 100-user group you can pin all assignees to the top.
+  - Per-row spinner during in-flight toggle mutations.
+  - Debounced search (200 ms) on the Users / Groups / Accesses listings to keep input responsive on 10k+-row tables.
+  - Soft-delete UI: when the configured `User` uses `Illuminate\Database\Eloquent\SoftDeletes`, the listing exposes an *Active / All / Deleted* segmented filter and trashed rows show a "Deleted" badge plus a Restore action (the `DELETE /acl/users` endpoint already toggled delete/restore — only the UI was missing).
+  - Dynamic user form: the Edit/New drawer renders inputs from the `$fillable` of the configured `User` model (`GET /acl/get_user_fillable_data` returns the schema), so hosts can add custom columns like `position` and the form picks them up automatically. Hidden fields render as password inputs; aggressive autofill blockers (`autoComplete="new-password"`, randomized `name`, `data-lpignore`, `data-1p-ignore`) keep browsers from filling the admin's password into a row they're editing.
+- `MeController` + `GET /acl/me` returning the authenticated user's `id / name / email`, or `{ data: null }` when anonymous. Used by the top nav to render the current admin's chip.
+- `Sefirosweb\LaravelAccessList\Seeders\AclDemoSeeder`: production-safe demo seeder (100 users, 15 roles, 50 access lists, random many-to-many wiring). Idempotent on roles/access lists via `firstOrCreate`; users gated by a `count >= 100` check. Resolves models via `config(...)` so it works against any host override.
+- `MeControllerTest`, `EagerLoadingTest` (regression for the N+1 fixes below), `AclDemoSeederTest` (volume + idempotency). Suite is now **32 tests / 91 assertions**.
+- `useDebouncedValue` hook + `IconRefresh` icon (used by the Restore action).
+
+### Changed
+- **Eager loading on listing endpoints** — closes a real N+1 the smoke test surfaced (one extra request per row to fetch the row's relations):
+  - `GET /acl/users` now `with('roles:id,name,description')`.
+  - `GET /acl/roles` now `withCount(['users', 'access_lists'])`.
+  - `GET /acl/access_list` now `with('roles:id,name')`.
+  Frontend reads these directly instead of issuing per-row follow-up requests.
+- **Backend nomenclature aligned with Laravel/Eloquent conventions**: every `acl_id` request input was renamed to `access_list_id` (controllers, requests, seed data) so payloads match the resource's actual table/column names. The package frontend translates the UI names ("Grupos", "Accesos") at the i18n layer; backend stays idiomatic Laravel.
+- `Http\Requests\RoleRequest` and `AccessListRequest` now read the row id from `role_id` / `access_list_id` (matching what the bundled UI sends) when building the unique-name rule, instead of `$this->id`. Description is now nullable. This fixes editing a row to keep its current name (was failing the unique constraint).
+- `RoleController::get_acl_array` renamed to `get_access_lists_array` (the route alias `roles/access_lists/get_array` is unchanged, only the public PHP method name moved). External callers using the route are unaffected.
+- README rewritten — new screenshots of the bundled UI, updated *Customizing the User model* section reflecting the new bundled `User` model defaults, soft-delete UI section, demo seeder section.
+
 ### Fixed
 - `UserController::store/update/destroy` now tolerate `User` models that don't define `getRules()` / `changeRules()` (guarded with `method_exists`). Previously a custom `App\Models\User` without these methods caused `Call to undefined method` fatals on the CRUD endpoints.
 - `UserController::enabledSoftDelete()` and `get_fillable_data()` no longer hard-reference `App\Models\User`. They now resolve the model from `config('laravel-access-list.User')`, removing the implicit dependency on the host's `App\Models\User` class existing.
 - `getRules()` excludes the row being updated from the unique-email rule by reading `user_id` from the request (the field the package frontend sends), in addition to `id`.
+- Toast was rendering bottom-right on top of the drawer's confirm button. Moved to top-right with `z-index: 80` (above drawer 51 / modal 60).
 
-### Added
+### Added (model)
 - `Sefirosweb\LaravelAccessList\Http\Models\User` now ships with `getRules()` and `changeRules()` defined directly. The model is usable as the package default without requiring the host to override the config or add a trait.
-- `$fillable = ['name', 'email', 'password']` and `$hidden = ['password', 'remember_token']` on the package `User` so `mass assignment` and JSON serialization behave correctly out of the box.
-- 8 new feature tests covering store/update/destroy flows including the tolerance case for hosts that override `User` without `getRules()` (suite is now 25 tests / 65 assertions).
+- `$fillable = ['name', 'email', 'password']` and `$hidden = ['password', 'remember_token']` on the package `User` so mass assignment and JSON serialization behave correctly out of the box.
 
 ### Deprecated
 - `Sefirosweb\LaravelAccessList\Http\Traits\SelfModelValidator`: the trait's `saving`/`creating` hooks validate via `$model->toArray()`, which silently drops `$hidden` fields like `password` and produces false "required" failures. The trait is unused inside the package and will be removed in v14.0.0. Apps that adopted it should move `getRules()`/`changeRules()` directly onto their model.
+
+### Removed
+- `react-bootstrap`, `@sefirosweb/react-crud`, the legacy `how_to.gif` and the old Webpack/Mix-style asset pipeline. Asset publishing target (`public/vendor/laravel-access-list`) is unchanged — `php artisan vendor:publish --tag=acl-assets --force` still works and overwrites cleanly.
 
 ## [13.0.0] - 2026-05-09
 

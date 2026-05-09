@@ -152,6 +152,42 @@ $user->roles()->attach($role);
 
 After publishing assets and enabling the package routes, browse to `/acl` to use the bundled admin UI for creating roles, access lists, and assigning them to users.
 
+The UI is a React 19 + TanStack Query SPA, fully self-contained — no CDN, no external assets. It talks to the package's REST endpoints under `/acl/*`. Translations ship in ES and EN with browser-language detection and a manual switcher in the top nav.
+
+**Users**
+
+![Users listing](docs/screenshots/users-list.png)
+
+**Groups (a.k.a. roles)**
+
+![Groups listing](docs/screenshots/groups-list.png)
+
+**Access lists**
+
+![Access lists](docs/screenshots/accesses-list.png)
+
+**Relations drawer** — click the count badge on any row to open a searchable, paginated picker with a *Name / Assigned* sort toggle. Toggles are optimistic with rollback on error.
+
+![Relation picker](docs/screenshots/relation-picker.png)
+
+#### Soft-deleted users
+
+If your `User` model uses `Illuminate\Database\Eloquent\SoftDeletes`, the listing exposes an *Active / All / Deleted* segmented filter and trashed rows show a "Deleted" badge plus a Restore action. The package detects soft delete support automatically by inspecting the configured model's traits (`GET /acl/get_user_fillable_data` returns the schema the form should render).
+
+#### Custom user columns
+
+The Edit/New drawer renders form inputs from the `$fillable` of the configured `User` model. If your `App\Models\User` adds extra columns, they show up automatically with the right input type (string → text, hidden → password, int → number, timestamp → datetime). No need to fork the package frontend.
+
+#### Demo seeder
+
+For local development the package ships `Sefirosweb\LaravelAccessList\Seeders\AclDemoSeeder` (100 users, 15 roles, 50 access lists with random many-to-many wiring). Run it from your host's `DatabaseSeeder`:
+
+```php
+$this->call(\Sefirosweb\LaravelAccessList\Seeders\AclDemoSeeder::class);
+```
+
+Or directly: `php artisan db:seed --class="Sefirosweb\\LaravelAccessList\\Seeders\\AclDemoSeeder"`. The seeder is idempotent on roles and access lists (`firstOrCreate`) and skips inserting users when the table already has 100 rows, so it's safe to re-run.
+
 ### 4. Check ACL from your own code
 
 ```php

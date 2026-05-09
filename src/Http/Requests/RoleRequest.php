@@ -25,16 +25,19 @@ class RoleRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->input('role_id') ?? $this->input('id');
+        $Role = config('laravel-access-list.Role');
+
         return [
             'name' => [
                 'required',
                 'min:3',
                 'max:255',
-                'unique:Sefirosweb\LaravelAccessList\Http\Models\Role,name,' . $this->id
+                'unique:' . $Role . ',name,' . ($id ?: 'NULL'),
             ],
             'description' => [
-                'required',
-                'min:3',
+                'nullable',
+                'string',
                 'max:255',
             ],
         ];

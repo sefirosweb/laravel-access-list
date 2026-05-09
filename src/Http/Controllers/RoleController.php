@@ -21,7 +21,13 @@ class RoleController extends Controller
     public function get()
     {
         $Role = config('laravel-access-list.Role');
-        return response()->json(['success' => true, 'data' => $Role::query()->get()]);
+        // The listing only shows the *count* of users / access lists per
+        // role, so withCount is enough — no need to materialise the full
+        // pivot rows. Avoids N+1 in the bundled UI.
+        $data = $Role::query()
+            ->withCount(['users', 'access_lists'])
+            ->get();
+        return response()->json(['success' => true, 'data' => $data]);
     }
 
     /**
@@ -100,7 +106,7 @@ class RoleController extends Controller
     {
         $Role = config('laravel-access-list.Role');
         $role = $Role::findOrFail($request->role_id);
-        $role->access_lists()->syncWithoutDetaching($request->acl_id);
+        $role->access_lists()->syncWithoutDetaching($request->access_list_id);
         return response()->json(['success' => true]);
     }
 
@@ -108,7 +114,7 @@ class RoleController extends Controller
     {
         $Role = config('laravel-access-list.Role');
         $role = $Role::findOrFail($request->role_id);
-        $role->access_lists()->detach($request->acl_id);
+        $role->access_lists()->detach($request->access_list_id);
         return response()->json(['success' => true]);
     }
 
@@ -119,7 +125,7 @@ class RoleController extends Controller
         return response()->json(['data' => $users]);
     }
 
-    public function get_acl_array()
+    public function get_access_lists_array()
     {
         $User = config('laravel-access-list.AccessList');
         $accessList = $User::select(['id', 'id as value', 'name'])->get();

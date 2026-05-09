@@ -7,6 +7,13 @@ namespace Sefirosweb\LaravelAccessList\Http\Traits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @deprecated since v13.0.1 — `getRules()` / `changeRules()` are now defined
+ * directly on Sefirosweb\LaravelAccessList\Http\Models\User. The trait's
+ * saving/creating hooks validate via $model->toArray(), which silently drops
+ * fields listed in $hidden (e.g. `password`), causing false "required" failures.
+ * Add the methods directly to your model instead. Will be removed in v14.0.0.
+ */
 trait SelfModelValidator
 {
     protected $rules = [];

@@ -6,7 +6,6 @@ namespace Sefirosweb\LaravelAccessList\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -46,17 +45,21 @@ class UserController extends Controller
     {
         $User = config('laravel-access-list.User');
 
-        Validator::make($request->all(), $User::getRules())->validate();
+        $rules = method_exists($User, 'getRules') ? $User::getRules() : [];
+        if ($rules) {
+            Validator::make($request->all(), $rules)->validate();
+        }
 
         $request->merge([
             'password' => $request->password ? Hash::make($request->password) : Hash::make('guest')
         ]);
 
-        $rules = $User::getRules();
         unset($rules['password']);
 
         $user = new $User($request->all());
-        $user->changeRules($rules);
+        if (method_exists($user, 'changeRules')) {
+            $user->changeRules($rules);
+        }
         $user->save();
         return response()->json(['success' => true]);
     }
@@ -115,7 +118,9 @@ class UserController extends Controller
             if (!$user->deleted_at) {
                 $user->delete();
             } else {
-                $user->changeRules([]);
+                if (method_exists($user, 'changeRules')) {
+                    $user->changeRules([]);
+                }
                 $user->restore();
             }
         } else {
@@ -175,13 +180,15 @@ class UserController extends Controller
 
     private function enabledSoftDelete()
     {
-        $model = new ModelsUser();
+        $User = config('laravel-access-list.User');
+        $model = new $User();
         return in_array('Illuminate\Database\Eloquent\SoftDeletes', class_uses($model));
     }
 
     public function get_fillable_data()
     {
-        $model = new ModelsUser();
+        $User = config('laravel-access-list.User');
+        $model = new $User();
 
         $id = $model->getKeyName();
         $fillable = $model->getFillable();

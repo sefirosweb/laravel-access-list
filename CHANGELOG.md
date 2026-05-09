@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [13.0.1] - 2026-05-09
+
+### Fixed
+- `UserController::store/update/destroy` now tolerate `User` models that don't define `getRules()` / `changeRules()` (guarded with `method_exists`). Previously a custom `App\Models\User` without these methods caused `Call to undefined method` fatals on the CRUD endpoints.
+- `UserController::enabledSoftDelete()` and `get_fillable_data()` no longer hard-reference `App\Models\User`. They now resolve the model from `config('laravel-access-list.User')`, removing the implicit dependency on the host's `App\Models\User` class existing.
+- `getRules()` excludes the row being updated from the unique-email rule by reading `user_id` from the request (the field the package frontend sends), in addition to `id`.
+
+### Added
+- `Sefirosweb\LaravelAccessList\Http\Models\User` now ships with `getRules()` and `changeRules()` defined directly. The model is usable as the package default without requiring the host to override the config or add a trait.
+- `$fillable = ['name', 'email', 'password']` and `$hidden = ['password', 'remember_token']` on the package `User` so `mass assignment` and JSON serialization behave correctly out of the box.
+- 8 new feature tests covering store/update/destroy flows including the tolerance case for hosts that override `User` without `getRules()` (suite is now 25 tests / 65 assertions).
+
+### Deprecated
+- `Sefirosweb\LaravelAccessList\Http\Traits\SelfModelValidator`: the trait's `saving`/`creating` hooks validate via `$model->toArray()`, which silently drops `$hidden` fields like `password` and produces false "required" failures. The trait is unused inside the package and will be removed in v14.0.0. Apps that adopted it should move `getRules()`/`changeRules()` directly onto their model.
+
+## [13.0.0] - 2026-05-09
+
+### Changed
+- Bumped `laravel/framework` to `^13.0`, `php` to `^8.3`, `phpunit/phpunit` to `^12.0`, `orchestra/testbench` to `^11.0`. CI matrix now PHP 8.3 / 8.4. Branch policy: `13.x` is the new default, `12.x` frozen for fix-only.
+
 ## [12.0.3] - 2026-04-23
 
 ### Changed

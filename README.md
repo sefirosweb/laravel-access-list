@@ -6,15 +6,15 @@ The design goal is to stay out of your auth flow — this package does **not** m
 
 ## Requirements
 
-- PHP `^8.2`
-- Laravel `^12.0`
+- PHP `^8.3`
+- Laravel `^13.0`
 
-Older majors of Laravel live on separate branches (`9.x`) and will not be upgraded.
+Older majors of Laravel live on separate branches (`12.x`, `9.x`) and only receive critical fixes.
 
 ## Installation
 
 ```bash
-composer require sefirosweb/laravel-access-list:^12.0
+composer require sefirosweb/laravel-access-list:^13.0
 ```
 
 The service provider auto-registers via Laravel's package discovery.
@@ -56,13 +56,67 @@ return [
 
 - `prefix`: the URL prefix for the bundled admin UI (`/acl/...`).
 - `middleware`: the middleware stack applied to those routes.
-- `User`: **override this** in production to point at `App\Models\User` (or your own) — the bundled User model is only used for seeding and testing. Your User model must expose a `roles(): BelongsToMany` relation returning `Role` models.
+- `AccessList` / `Role` / `User`: model classes the package resolves at runtime. The defaults point to the bundled models so the package works out of the box. See *Customizing the User model* below if you want to use your own.
 
 Publish the admin UI assets:
 
 ```bash
 php artisan vendor:publish --provider="Sefirosweb\LaravelAccessList\LaravelAccessListServiceProvider" --tag=acl-assets --force
 ```
+
+## Customizing the User model
+
+The package ships with `Sefirosweb\LaravelAccessList\Http\Models\User`, fully usable out of the box. Most production apps will want to point at their own `App\Models\User` instead (so it carries auth scaffolding, custom columns, casts, etc.). This follows the same pattern as `spatie/laravel-permission`: the config defaults to the package's model, you override it for your app.
+
+### Recommended: extend the package model
+
+This is the simplest and most forward-compatible way — your model inherits `roles()`, `getRules()`, `changeRules()`, `$fillable`, `$hidden` for free, and you only redeclare what you need to customize.
+
+```php
+// app/Models/User.php
+namespace App\Models;
+
+use Sefirosweb\LaravelAccessList\Http\Models\User as AccessListUser;
+
+class User extends AccessListUser
+{
+    // Your own casts, fillable, scopes, accessors...
+}
+```
+
+```php
+// config/laravel-access-list.php
+'User' => App\Models\User::class,
+```
+
+That's it. The bundled `/acl` UI now operates on your `App\Models\User`.
+
+### Alternative: keep your model independent
+
+If you can't extend (e.g. your `App\Models\User` already extends a base class from another package), the bundled `UserController` is **tolerant** — it guards calls to `getRules()` / `changeRules()` with `method_exists()`, so missing those methods just disables the package's input validation (you can plug in your own `FormRequest` instead). The only hard requirement is the `roles()` relation, used by the "Roles del user" modal:
+
+```php
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+class User extends Authenticatable
+{
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            config('laravel-access-list.Role'),
+            'user_has_role'
+        );
+    }
+
+    // Optional helpers if you want to call $user->hasAcl('foo') from your code:
+    public function hasAcl(string $acl): bool { /* ... */ }
+}
+```
+
+If you also want the package to validate user input on `POST /acl/users` and `PUT /acl/users`, add the static `getRules()` and instance `changeRules()` methods (signatures match the bundled User).
 
 ## Usage
 
@@ -127,7 +181,7 @@ docker exec -w /var/www/html/packages/laravel-access-list laravel-test-laravel.t
 
 ## Versioning
 
-Major versions are aligned with Laravel majors (`12.x`, `11.x`, `9.x` …). See the root [CLAUDE.md](https://github.com/sefirosweb/laravel-test/blob/12.0/CLAUDE.md) of the test harness for the full policy.
+Major versions are aligned with Laravel majors (`13.x`, `12.x`, `11.x`, `9.x` …). See the root [CLAUDE.md](https://github.com/sefirosweb/laravel-test/blob/13.0/CLAUDE.md) of the test harness for the full policy.
 
 ## License
 

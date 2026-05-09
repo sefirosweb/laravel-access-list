@@ -2,7 +2,13 @@ import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMe } from '@/hooks/useMe';
 import { Avatar } from '@/ui/Avatar';
-import { IconKey, IconLogo, IconShield, IconUsers } from '@/ui/icons';
+import {
+    IconArrowLeft,
+    IconKey,
+    IconLogo,
+    IconShield,
+    IconUsers,
+} from '@/ui/icons';
 import { LanguageSwitcher } from './LanguageSwitcher';
 
 export type Tab = 'users' | 'groups' | 'accesses';
@@ -48,6 +54,14 @@ export const TopNav = ({ tab, onTab, counts }: TopNavProps) => {
     return (
         <nav className="top-nav">
             <div className="top-nav-inner">
+                <a
+                    className="nav-back"
+                    href="/"
+                    title={t('nav.backToApp')}
+                    aria-label={t('nav.backToApp')}
+                >
+                    <IconArrowLeft size={16} />
+                </a>
                 <div className="nav-brand">
                     <IconLogo size={22} />
                     <span>{t('nav.appName')}</span>

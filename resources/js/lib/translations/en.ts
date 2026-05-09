@@ -4,6 +4,11 @@ export const en = {
         users: 'Users',
         groups: 'Groups',
         accesses: 'Accesses',
+        backToApp: 'Back to app',
+    },
+    footer: {
+        builtBy: 'Built by',
+        viewSource: 'View source on GitHub',
     },
     common: {
         save: 'Save changes',

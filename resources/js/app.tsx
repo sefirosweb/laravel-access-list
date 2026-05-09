@@ -7,6 +7,7 @@ import { useUsers } from '@/hooks/useUsers';
 import '@/lib/i18n';
 import { AccessesView } from '@/pages/accesses/Accesses';
 import { GroupsView } from '@/pages/groups/Groups';
+import { AppFooter } from '@/pages/layout/AppFooter';
 import { TopNav, Tab } from '@/pages/layout/TopNav';
 import { UsersView } from '@/pages/users/Users';
 import { ToastProvider } from '@/ui/Toast';
@@ -56,6 +57,7 @@ const Shell = () => {
                 {tab === 'groups' && <GroupsView />}
                 {tab === 'accesses' && <AccessesView />}
             </main>
+            <AppFooter />
         </ToastProvider>
     );
 };

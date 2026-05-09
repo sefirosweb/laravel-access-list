@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [13.0.2] - 2026-05-09
+
+### Added
+- Keyboard accessibility on dialogs: `ConfirmModal` and `Drawer` now trap focus and restore it on close.
+  - Focus moves to the first focusable element when the dialog opens (Cancel button on confirms).
+  - `Tab` / `Shift+Tab` cycles within the dialog; the user can no longer tab into the underlying page.
+  - Closing the dialog restores focus to whatever was focused before it opened.
+  - `Escape` continues to close the dialog (skipped while a mutation is in flight, so users don't abort half-way).
+- New `useFocusTrap` hook in `resources/js/lib/` powering the trap. Reused 1:1 in `laravel-mailing` and `laravel-cronjobs`.
+
 ## [13.0.1] - 2026-05-09
 
 This release pairs a long list of backend hardening fixes with a complete rewrite of the bundled admin UI. The package surface is unchanged, so upgrading is just a `composer update` + republish of `acl-assets`. Hosts that copy or extend `Sefirosweb\…\Http\Models\User` should re-read the *Customizing the User model* section of the README — the package model now ships `getRules()`, `changeRules()`, `$fillable` and `$hidden` directly.

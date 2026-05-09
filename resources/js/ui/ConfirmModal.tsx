@@ -1,5 +1,6 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 import { Button } from './Button';
 import { IconAlertTriangle } from './icons';
 
@@ -32,6 +33,18 @@ export const ConfirmModal = ({
     busy,
 }: ConfirmModalProps) => {
     const { t } = useTranslation();
+    const modalRef = useRef<HTMLDivElement>(null);
+    useFocusTrap(modalRef, open);
+
+    useEffect(() => {
+        if (!open || busy) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [open, busy, onClose]);
+
     if (!open) return null;
     const style = toneStyles[tone];
     return (
@@ -39,7 +52,7 @@ export const ConfirmModal = ({
             className="modal-overlay"
             onClick={(e) => e.target === e.currentTarget && onClose()}
         >
-            <div className="modal">
+            <div className="modal" ref={modalRef} role="dialog" aria-modal="true">
                 <div className="modal-body">
                     <div
                         className="modal-icon-wrap"

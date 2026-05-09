@@ -1,4 +1,5 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
+import { useFocusTrap } from '@/lib/useFocusTrap';
 import { Button } from './Button';
 import { IconX } from './icons';
 
@@ -19,6 +20,9 @@ export const Drawer = ({
     footer,
     children,
 }: DrawerProps) => {
+    const drawerRef = useRef<HTMLElement>(null);
+    useFocusTrap(drawerRef, open);
+
     useEffect(() => {
         if (!open) return;
         const onKey = (e: KeyboardEvent) => {
@@ -32,7 +36,12 @@ export const Drawer = ({
     return (
         <>
             <div className="drawer-overlay" onClick={onClose} />
-            <aside className="drawer" role="dialog" aria-modal="true">
+            <aside
+                className="drawer"
+                role="dialog"
+                aria-modal="true"
+                ref={drawerRef}
+            >
                 <div className="drawer-header">
                     <div>
                         <h2 className="drawer-title">{title}</h2>
